@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BE\BE-Aplicacion.csproj" />
-    <ProjectReference Include="..\BL\BL-Dominio.csproj" />
+    <ProjectReference Include="..\BE\BE.csproj" />
+    <ProjectReference Include="..\BL\BLL.csproj" />
     <ProjectReference Include="..\Servicios\Servicios.csproj" />
   </ItemGroup>
 

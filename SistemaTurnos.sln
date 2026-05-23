@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaTurnosUI", "SistemaTurnosUI\SistemaTurnosUI.csproj", "{0B03D51F-000F-4E63-A04B-19732C7AA98E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaTurnosUI", "SistemaTurnosUI\SistemaTurnosUI.csproj", "{0B03D51F-000F-4E63-A04B-19732C7AA98E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BE-Aplicacion", "BE\BE-Aplicacion.csproj", "{D204F9FA-FF03-4126-838B-C67A42D65564}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BE", "BE\BE.csproj", "{D204F9FA-FF03-4126-838B-C67A42D65564}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BL-Dominio", "BL\BL-Dominio.csproj", "{3A6152A0-5B7E-453A-929B-3340E69C1251}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{3A6152A0-5B7E-453A-929B-3340E69C1251}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL-AccesoDatos", "DAL-AccesoDatos\DAL-AccesoDatos.csproj", "{5CA83B44-46F6-4462-ADE5-640F8E845279}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{5CA83B44-46F6-4462-ADE5-640F8E845279}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Servicios", "Servicios\Servicios.csproj", "{7C2C9927-D869-45AA-B2E8-EFF909CF654B}"
 EndProject

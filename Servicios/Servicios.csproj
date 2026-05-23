@@ -41,13 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SesionSingleton.cs" />
+    <Compile Include="SessionManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BL\BL-Dominio.csproj">
+    <ProjectReference Include="..\BE\BE.csproj">
+      <Project>{d204f9fa-ff03-4126-838b-c67a42d65564}</Project>
+      <Name>BE</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BLL\BLL.csproj">
       <Project>{3a6152a0-5b7e-453a-929b-3340e69c1251}</Project>
-      <Name>BL-Dominio</Name>
+      <Name>BLL</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

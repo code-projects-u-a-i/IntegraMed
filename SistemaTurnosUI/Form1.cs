@@ -1,5 +1,6 @@
-using BL;
 using Servicios;
+using BE;
+using System;
 
 namespace SistemaTurnosUI
 {
@@ -9,22 +10,27 @@ namespace SistemaTurnosUI
         {
             InitializeComponent();
         }
+        private AuthService authService = new AuthService();
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             if (textBox1.Text.Length > 0 && textBox2.Text.Length > 0)
             {
-                Usuario usuario = new Usuario();
-                usuario.Id = 1;
-                usuario.Nombre = textBox1.Text;
-                usuario.password = textBox2.Text;
+                try
+                {
+                    var result = authService.Login(textBox1.Text, textBox2.Text);
 
-                SesionSingleton.getInstance().Login(usuario);
-                MessageBox.Show("Ingreso OK, hola " + textBox1.Text);
+                    ManejarResult(result);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
             else
             {
@@ -32,16 +38,48 @@ namespace SistemaTurnosUI
             }
         }
 
+      
+
         private void button2_Click(object sender, EventArgs e)
         {
-           if( SesionSingleton.getInstance().EstaLogueado())
-           {
-                SesionSingleton.getInstance().Logout();
-                MessageBox.Show("Salio OK");
-            }
-            else
+            try
             {
-                MessageBox.Show("No ingresó con el usuario y contraseña, para salir, primero debe ingresar");
+                authService.Logout();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+
+        private void ManejarResult(LoginResult result)
+        {
+            switch (result)
+            {
+                case LoginResult.Exito:
+                    MessageBox.Show("¡Bienvenido al sistema!", "Inicio de Sesión", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+
+                case LoginResult.CredencialesInvalidas:
+                    MessageBox.Show("Usuario o contraseña incorrectos. Por favor, intente nuevamente.", "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
+                    textBox2.Clear();
+                    textBox2.Focus();
+                    break;
+
+                case LoginResult.UsuarioBloqueado:
+                    MessageBox.Show("Esta cuenta se encuentra bloqueada por superar el límite de intentos fallidos. Contacte al administrador.", "Cuenta Bloqueada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+
+                case LoginResult.UsuarioNoEncontrado:
+                    MessageBox.Show("Usuario o contraseña incorrectos.", "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+
+                default:
+                    MessageBox.Show("Ocurrió un estado inesperado durante el inicio de sesión.", "Error Desconocido", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
             }
         }
     }

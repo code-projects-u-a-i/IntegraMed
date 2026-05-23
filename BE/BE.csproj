@@ -42,20 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BL\BL-Dominio.csproj">
-      <Project>{3a6152a0-5b7e-453a-929b-3340e69c1251}</Project>
-      <Name>BL-Dominio</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DAL-AccesoDatos\DAL-AccesoDatos.csproj">
-      <Project>{5ca83b44-46f6-4462-ade5-640f8e845279}</Project>
-      <Name>DAL-AccesoDatos</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Servicios\Servicios.csproj">
-      <Project>{7c2c9927-d869-45aa-b2e8-eff909cf654b}</Project>
-      <Name>Servicios</Name>
-    </ProjectReference>
+    <Compile Include="Usuario.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
