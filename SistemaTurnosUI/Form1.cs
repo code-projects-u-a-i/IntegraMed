@@ -1,6 +1,8 @@
-using Servicios;
+ï»¿using Servicios;
 using BE;
 using System;
+using System.Configuration;
+using Microsoft.Data.SqlClient;
 
 namespace SistemaTurnosUI
 {
@@ -14,7 +16,10 @@ namespace SistemaTurnosUI
 
         private void Form1_Load(object sender, EventArgs e)
         {
+                // 1. Leer la cadena del App.config
+                string connectionString = ConfigurationManager.ConnectionStrings["ConnString"]?.ConnectionString;
 
+               
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -34,7 +39,7 @@ namespace SistemaTurnosUI
             }
             else
             {
-                MessageBox.Show("Debe ingresar usuario y contraseña para continuar");
+                MessageBox.Show("Debe ingresar usuario y contraseÃ±a para continuar");
             }
         }
 
@@ -59,26 +64,26 @@ namespace SistemaTurnosUI
             switch (result)
             {
                 case LoginResult.Exito:
-                    MessageBox.Show("¡Bienvenido al sistema!", "Inicio de Sesión", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Â¡Bienvenido al sistema!", "Inicio de SesiÃ³n", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
 
                 case LoginResult.CredencialesInvalidas:
-                    MessageBox.Show("Usuario o contraseña incorrectos. Por favor, intente nuevamente.", "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Usuario o contraseÃ±a incorrectos. Por favor, intente nuevamente.", "Error de AutenticaciÃ³n", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     
                     textBox2.Clear();
                     textBox2.Focus();
                     break;
 
                 case LoginResult.UsuarioBloqueado:
-                    MessageBox.Show("Esta cuenta se encuentra bloqueada por superar el límite de intentos fallidos. Contacte al administrador.", "Cuenta Bloqueada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Esta cuenta se encuentra bloqueada por superar el lÃ­mite de intentos fallidos. Contacte al administrador.", "Cuenta Bloqueada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;
 
                 case LoginResult.UsuarioNoEncontrado:
-                    MessageBox.Show("Usuario o contraseña incorrectos.", "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Usuario o contraseÃ±a incorrectos.", "Error de AutenticaciÃ³n", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
 
                 default:
-                    MessageBox.Show("Ocurrió un estado inesperado durante el inicio de sesión.", "Error Desconocido", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("OcurriÃ³ un estado inesperado durante el inicio de sesiÃ³n.", "Error Desconocido", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
         }
