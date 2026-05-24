@@ -13,7 +13,7 @@ namespace DAL
         {
             var dao = new DAO();
 
-       
+
             string fechaFormateada = bitacora.FechaUTC.ToString("yyyy-MM-dd HH:mm:ss");
 
             string sqlInsert = $@"

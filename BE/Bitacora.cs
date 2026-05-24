@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BE
 {
@@ -20,7 +16,7 @@ namespace BE
 
         public Bitacora()
         {
-            FechaUTC = DateTime.UtcNow; 
+            FechaUTC = DateTime.UtcNow;
             Usuario_Username = string.Empty;
             Accion = string.Empty;
             Mensaje = string.Empty;

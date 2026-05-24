@@ -1,4 +1,8 @@
-.vs/
+# Carpetas de salida de compilación
 [Bb]in/
 [Oo]bj/
+
+# Archivos de configuración del usuario de Visual Studio
+.vs/
+*.suo
 *.user

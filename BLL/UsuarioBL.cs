@@ -9,7 +9,7 @@ namespace BLL
 
         public UsuarioBL() { }
 
-      
+
         public Usuario ObtenerPorNombre(string username)
         {
             return UsuarioDAL.ObtenerPorNombre(username);
@@ -19,7 +19,7 @@ namespace BLL
         {
             UsuarioDAL.ActualizarPorId(usuario);
         }
-         
+
 
     }
 }

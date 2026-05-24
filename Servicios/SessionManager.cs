@@ -8,7 +8,7 @@ namespace Servicios
         private static readonly object _lock = new object();
         private static SessionManager _instancia;
 
-        
+
         public Usuario Usuario { get; private set; }
         public DateTime FechaInicio { get; private set; }
 
@@ -52,8 +52,8 @@ namespace Servicios
                     throw new Exception("Sesión no iniciada");
                 }
 
-                Usuario = null; 
-                
+                Usuario = null;
+
             }
         }
 

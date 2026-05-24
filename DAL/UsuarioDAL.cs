@@ -1,10 +1,6 @@
-﻿using BE;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BE;
 
 namespace DAL
 {
@@ -41,7 +37,6 @@ namespace DAL
             if (ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
                 return null;
 
-            // Reutilizamos el mismo método de mapeo
             return MapUsuario(ds.Tables[0].Rows[0]);
         }
 
@@ -72,6 +67,5 @@ namespace DAL
             };
         }
 
-    
     }
 }

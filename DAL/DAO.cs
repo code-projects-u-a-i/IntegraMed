@@ -1,12 +1,7 @@
-﻿using Microsoft.IdentityModel.Protocols;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Configuration;
-using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace DAL
 {
@@ -19,7 +14,6 @@ namespace DAL
         {
             _connectionString = ConfigurationManager.ConnectionStrings["ConnString"]?.ConnectionString;
 
-            // Control de seguridad por si te olvidas de configurarlo en la UI
             if (string.IsNullOrEmpty(_connectionString))
             {
                 throw new Exception("Error: No se encontró la cadena de conexión 'ConnString' en el archivo de configuración.");

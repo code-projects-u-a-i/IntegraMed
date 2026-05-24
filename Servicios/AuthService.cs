@@ -1,5 +1,6 @@
 ﻿using BE;
 using BLL;
+using System;
 
 namespace Servicios
 {
@@ -24,7 +25,7 @@ namespace Servicios
                 throw new System.Exception($"Ya existe una sesión activa en el sistema.");
             }
 
-           
+
             Usuario usuario = _usuarioBL.ObtenerPorNombre(username);
 
             if (usuario == null)
@@ -32,22 +33,26 @@ namespace Servicios
                 return LoginResult.UsuarioNoEncontrado;
             }
 
-            SessionManager.getInstance().CrearSession(usuario);
 
             if (usuario.Bloqueado)
             {
-                _bitacoraBL.IngresarBitacora(SessionManager.getInstance().Usuario.Id, SessionManager.getInstance().Usuario.Username,"Bloqueado","No puede ingresar", string.Empty);
+                _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Bloqueado", "No puede ingresar", string.Empty);
                 return LoginResult.UsuarioBloqueado;
             }
 
 
             if (passwordIngresada.Equals(usuario.Password))
             {
-                _bitacoraBL.IngresarBitacora(SessionManager.getInstance().Usuario.Id, SessionManager.getInstance().Usuario.Username, "Ingreso Exitoso", "Se blanquea intentos fallidos", string.Empty);
-                usuario.IntentosFallidos = 0;
-                if (usuario.IntentosFallidos != 0) _usuarioBL.ActualizarUsuario(usuario);
-                
-               return LoginResult.Exito;
+                SessionManager.getInstance().CrearSession(usuario);
+                _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Ingreso Exitoso", "Se blanquea intentos fallidos", string.Empty);
+
+                if (usuario.IntentosFallidos != 0)
+                {
+                    usuario.IntentosFallidos = 0;
+                    _usuarioBL.ActualizarUsuario(usuario);
+                }
+
+                return LoginResult.Exito;
             }
             else
             {
@@ -56,12 +61,12 @@ namespace Servicios
                 if (usuario.IntentosFallidos >= 3)
                 {
                     usuario.Bloqueado = true;
-                    _bitacoraBL.IngresarBitacora(SessionManager.getInstance().Usuario.Id, SessionManager.getInstance().Usuario.Username, "Bloqueado", "Alcanzo 3 intentos", string.Empty);
+                    _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Bloqueado", "Alcanzo 3 intentos", string.Empty);
                     _usuarioBL.ActualizarUsuario(usuario);
                     return LoginResult.UsuarioBloqueado;
                 }
 
-                _bitacoraBL.IngresarBitacora(SessionManager.getInstance().Usuario.Id, SessionManager.getInstance().Usuario.Username, "Credenciales Erroneas", "Se actualiza intento fallido", string.Empty);
+                _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Credenciales Erroneas", "Se actualiza intento fallido", string.Empty);
                 _usuarioBL.ActualizarUsuario(usuario);
                 return LoginResult.CredencialesInvalidas;
             }
@@ -69,9 +74,16 @@ namespace Servicios
 
         public void Logout()
         {
-       
-            _bitacoraBL.IngresarBitacora(SessionManager.getInstance().Usuario.Id, SessionManager.getInstance().Usuario.Username, "Se cierra sesion", string.Empty, string.Empty);
-            SessionManager.getInstance().CerrarSesion();
+            if (SessionManager.getInstance().Usuario != null)
+            {
+                _bitacoraBL.IngresarBitacora(SessionManager.getInstance().Usuario.Id, SessionManager.getInstance().Usuario.Username, "Se cierra sesion", string.Empty, string.Empty);
+                SessionManager.getInstance().CerrarSesion();
+            }
+            else
+            {
+                throw new Exception("Sesión no iniciada");
+            }
+
         }
     }
 }
