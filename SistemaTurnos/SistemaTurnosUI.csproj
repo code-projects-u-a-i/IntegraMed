@@ -57,6 +57,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegistrarseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegistrarseForm.Designer.cs">
+      <DependentUpon>RegistrarseForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -72,6 +78,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RegistrarseForm.resx">
+      <DependentUpon>RegistrarseForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -83,9 +92,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\BE\BE.csproj">
       <Project>{5e1884f7-eb29-4641-b9b9-d1cc6a95695a}</Project>
       <Name>BE</Name>
@@ -93,10 +99,6 @@
     <ProjectReference Include="..\BLL\BLL.csproj">
       <Project>{7e2c87a7-0cf9-45d4-ba9b-8fc2677acc6c}</Project>
       <Name>BLL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Servicios\Servicios.csproj">
-      <Project>{011ceda3-acd2-4d54-9668-0d4b462c3be4}</Project>
-      <Name>Servicios</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

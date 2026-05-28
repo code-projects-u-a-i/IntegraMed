@@ -6,6 +6,49 @@ namespace DAL
 {
     public class UsuarioDAL
     {
+
+        public static int InsertarUsuario(Usuario nuevoUsuario)
+        {
+            var dao = new DAO();
+
+
+            string userEsc = dao.Esc(nuevoUsuario.Username);
+            string passEsc = dao.Esc(nuevoUsuario.Password);
+
+            // 2. Armamos el SQL de inserción
+            // Seteamos explícitamente IntentosFallidos en 0 y Bloqueado en 0 para el alta
+            string sqlInsert = $@"
+            INSERT INTO Usuario (
+                Usuario_Username,
+                Usuario_Password,
+                Usuario_IntentosFallidos,
+                Usuario_Bloqueado
+            )
+            VALUES (
+                N'{userEsc}',
+                '{passEsc}',
+                0,
+                0
+            );
+            SELECT SCOPE_IDENTITY();";
+
+
+            object resultado = dao.ExecuteScalarFunction(sqlInsert);
+
+            if (resultado != null && resultado != DBNull.Value)
+            {
+                return Convert.ToInt32(resultado);
+            }
+
+            return 0; 
+        }
+
+
+
+
+
+
+
         public static Usuario ObtenerPorId(int id)
         {
             var dao = new DAO();

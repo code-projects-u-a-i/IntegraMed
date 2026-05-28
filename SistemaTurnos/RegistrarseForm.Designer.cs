@@ -1,6 +1,6 @@
-﻿namespace SistemaTurnosUI
+﻿namespace SistemaTurnos
 {
-    partial class Form1
+    partial class RegistrarseForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.panelLogin = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -37,6 +36,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
             this.panelLogin.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,20 +50,10 @@
             this.panelLogin.Controls.Add(this.label3);
             this.panelLogin.Controls.Add(this.label2);
             this.panelLogin.Controls.Add(this.label1);
-            this.panelLogin.Location = new System.Drawing.Point(97, 48);
+            this.panelLogin.Location = new System.Drawing.Point(94, 53);
             this.panelLogin.Name = "panelLogin";
             this.panelLogin.Size = new System.Drawing.Size(342, 316);
-            this.panelLogin.TabIndex = 0;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(55, 273);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(207, 23);
-            this.button2.TabIndex = 7;
-            this.button2.Text = "Registrarme";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.panelLogin.TabIndex = 1;
             // 
             // button1
             // 
@@ -71,7 +61,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(207, 39);
             this.button1.TabIndex = 6;
-            this.button1.Text = "Iniciar Sesion";
+            this.button1.Text = "Registrarme";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -84,9 +74,9 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(55, 138);
+            this.textBox1.Location = new System.Drawing.Point(52, 138);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(207, 20);
+            this.textBox1.Size = new System.Drawing.Size(210, 20);
             this.textBox1.TabIndex = 4;
             // 
             // label4
@@ -94,9 +84,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(52, 61);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(203, 13);
+            this.label4.Size = new System.Drawing.Size(132, 13);
             this.label4.TabIndex = 3;
-            this.label4.Text = "Introduce tus credenciales para continuar";
+            this.label4.Text = "Introduce tus credenciales";
             // 
             // label3
             // 
@@ -119,20 +109,31 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(52, 122);
+            this.label1.Location = new System.Drawing.Point(52, 113);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(81, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Nombre usuario";
             // 
-            // Form1
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(187, 273);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 7;
+            this.button2.Text = "Volver";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // RegistrarseForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(541, 438);
+            this.ClientSize = new System.Drawing.Size(530, 423);
             this.Controls.Add(this.panelLogin);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "RegistrarseForm";
+            this.Text = "Registrar Usuario";
+            this.Load += new System.EventHandler(this.RegistrarseForm_Load);
             this.panelLogin.ResumeLayout(false);
             this.panelLogin.PerformLayout();
             this.ResumeLayout(false);
@@ -152,4 +153,3 @@
         private System.Windows.Forms.Button button2;
     }
 }
-

@@ -1,5 +1,7 @@
 ﻿using BE;
+using BLL.Servicios;
 using DAL;
+using Seguridad;
 using System;
 
 namespace BLL
@@ -20,6 +22,54 @@ namespace BLL
             UsuarioDAL.ActualizarPorId(usuario);
         }
 
+        public void ActualizarContraseña(string passVieja, string passNueva)
+        {
+           ; 
+            // hasheo para ver si concide
+            CryptoManager crypto = new CryptoManager();
+            string passViejaHashed = crypto.HashMD5(passVieja);
+            
+            Usuario usuario = ObtenerPorNombre(SessionManager.getInstance().Usuario.Username);
+     
+            // coincide -- hasheo la nueva
+            if (string.Equals(usuario.Password, passViejaHashed, StringComparison.OrdinalIgnoreCase))
+            {
+                usuario.Password = crypto.HashMD5(passVieja);
+                ActualizarUsuario(usuario);
+                BitacoraBL bitacora = new BitacoraBL();
+                bitacora.IngresarBitacora(usuario.Id, usuario.Username, "ActualizarContraseña", "Contraseña actualizada", "");
+            }else
+            {// no coincide le digo que vuelva a intentar
+                throw new Exception("La contraseña existente no coincide, por favor vuelva a ingresarla");
+            }
+            
+        }
 
+        public void CrearUsuario(string username, string password)
+        {
+            
+            Usuario usuario = ObtenerPorNombre(username);
+            if (usuario == null)// no puede haber dos usuarios iguales
+            {
+                // hashear contraseña
+                CryptoManager  crypto = new CryptoManager();
+                string hashedPassw =crypto.HashMD5(password);
+                
+                // creo objeto con 0 intentos y false no bloqueado
+                usuario = new Usuario(username, hashedPassw);
+
+                // guardo en base
+                int ultimoID = UsuarioDAL.InsertarUsuario(usuario);
+                
+                // bitacora
+                BitacoraBL bitacora = new BitacoraBL();
+                bitacora.IngresarBitacora(ultimoID, username, "Nuevo Usuario", "usuario creado con exito", "");
+            }
+            else
+            {
+                throw new Exception("Ya existe un usuario con ese nombre, por favor intente con otro nombre");
+            }
+
+        }
     }
 }

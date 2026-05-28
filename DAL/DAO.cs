@@ -12,17 +12,18 @@ namespace DAL
 
         public DAO()
         {
-            _connectionString = ConfigurationManager.ConnectionStrings["ConnString"]?.ConnectionString;
-
-            if (string.IsNullOrEmpty(_connectionString))
-            {
-                throw new Exception("Error: No se encontró la cadena de conexión 'ConnString' en el archivo de configuración.");
-            }
+            
+            _connectionString = "Data Source=WIN-O7CAF1FNCVK;Initial Catalog=Proyecto_Ing_softw;Integrated Security=True;TrustServerCertificate=True;";
         }
 
         protected SqlConnection GetConnection()
         {
             return new SqlConnection(_connectionString);
+        }
+
+        public DAO(string connectionString)
+        {
+            _connectionString = connectionString;
         }
 
         public DataSet ExecuteDataSet(string sql, params SqlParameter[] parameters)

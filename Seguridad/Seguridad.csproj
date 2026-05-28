@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7E2C87A7-0CF9-45D4-BA9B-8FC2677ACC6C}</ProjectGuid>
+    <ProjectGuid>{EA149275-C64B-4A49-BA74-CEBC1CD0ECD7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BLL</RootNamespace>
-    <AssemblyName>BLL</AssemblyName>
+    <RootNamespace>Seguridad</RootNamespace>
+    <AssemblyName>Seguridad</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,25 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitacoraBL.cs" />
-    <Compile Include="Servicios\AuthService.cs" />
-    <Compile Include="Servicios\SessionManager.cs" />
-    <Compile Include="UsuarioBL.cs" />
+    <Compile Include="CryptoManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BE\BE.csproj">
-      <Project>{5e1884f7-eb29-4641-b9b9-d1cc6a95695a}</Project>
-      <Name>BE</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DAL\DAL.csproj">
-      <Project>{2e587e9f-0e11-44b3-beb1-639baa638cc2}</Project>
-      <Name>DAL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Seguridad\Seguridad.csproj">
-      <Project>{ea149275-c64b-4a49-ba74-cebc1cd0ecd7}</Project>
-      <Name>Seguridad</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

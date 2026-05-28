@@ -1,40 +1,49 @@
-﻿using BE;
+﻿using BLL;
 using BLL.Servicios;
-using SistemaTurnos;
+using SistemaTurnosUI;
 using System;
-using System.Configuration;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SistemaTurnosUI
+namespace SistemaTurnos
 {
-    public partial class Form1 : Form
+    public partial class RegistrarseForm : Form
     {
-        public Form1()
+        public RegistrarseForm()
         {
             InitializeComponent();
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.RegistrarseForm_Load);
         }
-        private AuthService authService = new AuthService();
-
-        private void Form1_Load(object sender, EventArgs e)
+        private UsuarioBL usuarioBL = new UsuarioBL();
+        private void RegistrarseForm_Load(object sender, EventArgs e)
         {
             ConfigurarEstilo();
         }
-        //iniciar sesion
+        // registrarse
         private void button1_Click(object sender, EventArgs e)
         {
             if (textBox1.Text.Length > 0 && textBox2.Text.Length > 0)
             {
                 try
                 {
-                    var result = authService.Login(textBox1.Text, textBox2.Text);
+                    usuarioBL.CrearUsuario(textBox1.Text, textBox2.Text);
+                    MessageBox.Show("¡Usuario creado con Exito!", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    ManejarResult(result);
+                    this.Hide();
+                    Form1 menu = new Form1();
+                    menu.ShowDialog();
+                    this.Close();
+
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -42,42 +51,6 @@ namespace SistemaTurnosUI
                 MessageBox.Show("Debe ingresar usuario y contraseña para continuar");
             }
         }
-
-        private void ManejarResult(LoginResult result)
-        {
-            switch (result)
-            {
-                case LoginResult.Exito:
-                    MessageBox.Show("¡Bienvenido al sistema!", "Inicio de Sesión", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    this.Hide();
-                    MenuPrincipalForm menu = new MenuPrincipalForm();
-                    menu.ShowDialog();
-                    this.Close();
-
-                    break;
-
-                case LoginResult.CredencialesInvalidas:
-                    MessageBox.Show("Usuario o contraseña incorrectos. Por favor, intente nuevamente.", "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    textBox2.Clear();
-                    textBox2.Focus();
-                    break;
-
-                case LoginResult.UsuarioBloqueado:
-                    MessageBox.Show("Esta cuenta se encuentra bloqueada por superar el límite de intentos fallidos. Contacte al administrador.", "Cuenta Bloqueada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
-
-                case LoginResult.UsuarioNoEncontrado:
-                    MessageBox.Show("Usuario o contraseña incorrectos.", "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
-
-                default:
-                    MessageBox.Show("Ocurrió un estado inesperado durante el inicio de sesión.", "Error Desconocido", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
-            }
-        }
-
         private void ConfigurarEstilo()
         {
 
@@ -86,7 +59,7 @@ namespace SistemaTurnosUI
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.Text = "Sistema de Gestión de Salud - Ingreso";
+            this.Text = "Sistema Sagrado Corazón- Registrarme";
 
 
             panelLogin.BackColor = Color.FromArgb(40, 50, 55);
@@ -144,11 +117,11 @@ namespace SistemaTurnosUI
 
             this.AcceptButton = button1;
         }
-        // registrarme
+        //volver
         private void button2_Click(object sender, EventArgs e)
         {
             this.Hide();
-            RegistrarseForm menu = new RegistrarseForm();
+            Form1 menu = new Form1();
             menu.ShowDialog();
             this.Close();
         }

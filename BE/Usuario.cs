@@ -9,5 +9,13 @@
         public bool Bloqueado { get; set; }
 
         public Usuario() { }
+
+        public Usuario( string username, string password)
+        {
+            Username = username;
+            Password = password;
+            IntentosFallidos = 0;
+            Bloqueado = false;
+        }
     }
 }
