@@ -31,7 +31,7 @@ namespace BLL
             };
             return nuevaBitacora;
         }
-        public void IngresarBitacora(int idUsuario, string nombre, string accion, string mensaje, string detalle)
+        public void IngresarBitacora(int idUsuario, string nombre, string accion, string mensaje, string detalle, SeveridadLog sev)
         {
             Bitacora bitacora = GenerarObjetoBitacora();
             bitacora.Usuario_ID = idUsuario;
@@ -39,7 +39,13 @@ namespace BLL
             bitacora.Usuario_Username = nombre;
             bitacora.Mensaje = mensaje;
             bitacora.Detalle = detalle;
+            bitacora.Severidad= sev;
             BitacoraDAL.Insertar(bitacora);
+        }
+
+        public List<Bitacora> ObtenerBitacora()
+        {
+            return BitacoraDAL.ObtenerBitacora();
         }
     }
 

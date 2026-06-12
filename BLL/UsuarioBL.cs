@@ -24,12 +24,12 @@ namespace BLL
 
         public void ActualizarContraseña(string passVieja, string passNueva)
         {
-           ; 
+           
             // hasheo para ver si concide
             CryptoManager crypto = new CryptoManager();
             string passViejaHashed = crypto.HashMD5(passVieja);
             
-            Usuario usuario = ObtenerPorNombre(SessionManager.getInstance().Usuario.Username);
+            Usuario usuario = ObtenerPorNombre(SessionManager.getInstance().ObtenerUsuario().Username);
      
             // coincide -- hasheo la nueva
             if (string.Equals(usuario.Password, passViejaHashed, StringComparison.OrdinalIgnoreCase))
@@ -37,7 +37,7 @@ namespace BLL
                 usuario.Password = crypto.HashMD5(passVieja);
                 ActualizarUsuario(usuario);
                 BitacoraBL bitacora = new BitacoraBL();
-                bitacora.IngresarBitacora(usuario.Id, usuario.Username, "ActualizarContraseña", "Contraseña actualizada", "");
+                bitacora.IngresarBitacora(usuario.Id, usuario.Username, "ActualizarContraseña", "Contraseña actualizada", "", SeveridadLog.Info);
             }else
             {// no coincide le digo que vuelva a intentar
                 throw new Exception("La contraseña existente no coincide, por favor vuelva a ingresarla");
@@ -63,7 +63,7 @@ namespace BLL
                 
                 // bitacora
                 BitacoraBL bitacora = new BitacoraBL();
-                bitacora.IngresarBitacora(ultimoID, username, "Nuevo Usuario", "usuario creado con exito", "");
+                bitacora.IngresarBitacora(ultimoID, username, "Nuevo Usuario", "usuario creado con exito", "", SeveridadLog.Info);
             }
             else
             {

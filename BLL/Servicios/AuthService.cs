@@ -41,7 +41,7 @@ namespace BLL.Servicios
 
             if (usuario.Bloqueado)
             {
-                _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Bloqueado", "No puede ingresar", string.Empty);
+                _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Bloqueado", "No puede ingresar", string.Empty, SeveridadLog.Warn);
                 return LoginResult.UsuarioBloqueado;
             }
 
@@ -49,7 +49,7 @@ namespace BLL.Servicios
             if (coincidePassw(passwordIngresada, _crypto, usuario.Password))
             {
                 SessionManager.getInstance().CrearSession(usuario);
-                _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Ingreso Exitoso", "Se blanquea intentos fallidos", string.Empty);
+                _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Ingreso Exitoso", "Se blanquea intentos fallidos", string.Empty, SeveridadLog.Info);
 
                 if (usuario.IntentosFallidos != 0)
                 {
@@ -66,12 +66,12 @@ namespace BLL.Servicios
                 if (usuario.IntentosFallidos >= 3)
                 {
                     usuario.Bloqueado = true;
-                    _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Bloqueado", "Alcanzo 3 intentos", string.Empty);
+                    _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Bloqueado", "Alcanzo 3 intentos", string.Empty, SeveridadLog.Warn);
                     _usuarioBL.ActualizarUsuario(usuario);
                     return LoginResult.UsuarioBloqueado;
                 }
 
-                _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Credenciales Erroneas", "Se actualiza intento fallido", string.Empty);
+                _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Credenciales Erroneas", "Se actualiza intento fallido", string.Empty,SeveridadLog.Warn);
                 _usuarioBL.ActualizarUsuario(usuario);
                 return LoginResult.CredencialesInvalidas;
             }
@@ -85,9 +85,9 @@ namespace BLL.Servicios
 
         public void Logout()
         {
-            if (SessionManager.getInstance().Usuario != null)
+            if (SessionManager.getInstance().ObtenerUsuario() != null)
             {
-                _bitacoraBL.IngresarBitacora(SessionManager.getInstance().Usuario.Id, SessionManager.getInstance().Usuario.Username, "Se cierra sesion", string.Empty, string.Empty);
+                _bitacoraBL.IngresarBitacora(SessionManager.getInstance().ObtenerUsuario().Id, SessionManager.getInstance().ObtenerUsuario().Username, "Se cierra sesion", string.Empty, string.Empty, SeveridadLog.Info);
                 SessionManager.getInstance().CerrarSesion();
             }
             else

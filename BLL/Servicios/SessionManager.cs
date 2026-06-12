@@ -11,12 +11,12 @@ namespace BLL.Servicios
     {
         private static readonly object _lock = new object();
         private static SessionManager _instancia;
-
-
-        public Usuario Usuario { get; private set; }
-        public DateTime FechaInicio { get; private set; }
+        private Usuario _usuario;
+        private DateTime _fechaInicio;
 
         private SessionManager() { }
+
+    
 
         public static SessionManager getInstance()
         {
@@ -37,13 +37,13 @@ namespace BLL.Servicios
         {
             lock (_lock)
             {
-                if (Usuario != null)
+                if (_usuario != null)
                 {
                     throw new Exception("Sesión ya iniciada");
                 }
 
-                Usuario = usuario;
-                FechaInicio = DateTime.Now;
+                _usuario = usuario;
+                _fechaInicio = DateTime.Now;
             }
         }
 
@@ -51,19 +51,24 @@ namespace BLL.Servicios
         {
             lock (_lock)
             {
-                if (Usuario == null)
+                if (_usuario == null)
                 {
                     throw new Exception("Sesión no iniciada");
                 }
 
-                Usuario = null;
+                _usuario = null;
 
             }
         }
-
         public bool HaySessionIniciada()
         {
-            return Usuario != null;
+            return _usuario != null;
         }
+
+        public Usuario ObtenerUsuario()
+        {
+            return _usuario;
+        }
+
     }
 }
