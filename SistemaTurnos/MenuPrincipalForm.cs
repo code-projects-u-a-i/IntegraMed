@@ -49,7 +49,6 @@ namespace SistemaTurnosUI
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Text = "Sistema Sagrado Corazón - Menu principal";
-
             this.menuStrip1.RenderMode = ToolStripRenderMode.System;
             this.menuStrip1.BackColor = SystemColors.Control;
             this.menuStrip1.Padding = new Padding(6, 6, 6, 6);
