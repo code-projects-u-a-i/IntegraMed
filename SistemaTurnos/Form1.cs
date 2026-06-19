@@ -49,10 +49,12 @@ namespace SistemaTurnosUI
             {
                 case LoginResult.Exito:
                     MessageBox.Show("¡Bienvenido al sistema!", "Inicio de Sesión", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                     this.Hide();
-                    MenuPrincipalForm menu = new MenuPrincipalForm();
-                    menu.ShowDialog();
+                    MenuPrincipalForm menuForm = new MenuPrincipalForm();
+                    menuForm.ShowDialog();
+                   // this.Hide();
+                    //MenuPrincipalForm menu = new MenuPrincipalForm();
+                    //menu.ShowDialog();
                     this.Close();
 
                     break;
@@ -147,6 +149,7 @@ namespace SistemaTurnosUI
         // registrarme
         private void button2_Click(object sender, EventArgs e)
         {
+            
             this.Hide();
             RegistrarseForm menu = new RegistrarseForm();
             menu.ShowDialog();
