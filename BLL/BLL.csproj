@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitacoraBL.cs" />
+    <Compile Include="Servicios\AdministrarPermisosService.cs" />
     <Compile Include="Servicios\AuthService.cs" />
     <Compile Include="Servicios\SessionManager.cs" />
     <Compile Include="UsuarioBL.cs" />

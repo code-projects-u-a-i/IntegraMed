@@ -1,4 +1,6 @@
-﻿namespace BE
+﻿using System.Collections.Generic;
+
+namespace BE
 {
     public class Usuario
     {
@@ -8,14 +10,37 @@
         public int IntentosFallidos { get; set; }
         public bool Bloqueado { get; set; }
 
+        private readonly List<Perfil> listaPerfiles = new List<Perfil>();
+
         public Usuario() { }
 
-        public Usuario( string username, string password)
+        public Usuario( string username, string password) // hay que agregar el mail y el dvh
         {
             Username = username;
             Password = password;
             IntentosFallidos = 0;
             Bloqueado = false;
         }
+
+        public bool TienePermiso(string patenteNombre)
+        {
+            foreach (Perfil perfil in listaPerfiles)
+            {
+                if (perfil != null && perfil.Contiene(patenteNombre))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void AgregarPermiso(Perfil perfil)
+        {
+            if (perfil != null && !listaPerfiles.Contains(perfil))
+            {
+                listaPerfiles.Add(perfil);
+            }
+        }
+
     }
 }

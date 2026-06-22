@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bitacora.cs" />
-    <Compile Include="Componente.cs" />
+    <Compile Include="Perfil.cs" />
     <Compile Include="Familia.cs" />
     <Compile Include="Patente.cs" />
     <Compile Include="Usuario.cs" />

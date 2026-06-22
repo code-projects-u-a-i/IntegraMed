@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.SqlClient;
 using BE;
 
 namespace DAL
@@ -15,7 +16,6 @@ namespace DAL
             string userEsc = dao.Esc(nuevoUsuario.Username);
             string passEsc = dao.Esc(nuevoUsuario.Password);
 
-            // 2. Armamos el SQL de inserción
             // Seteamos explícitamente IntentosFallidos en 0 y Bloqueado en 0 para el alta
             string sqlInsert = $@"
             INSERT INTO Usuario (
@@ -42,12 +42,6 @@ namespace DAL
 
             return 0; 
         }
-
-
-
-
-
-
 
         public static Usuario ObtenerPorId(int id)
         {
@@ -97,6 +91,34 @@ namespace DAL
 
             dao.ExecuteNonQueryFuntion(sqlUpdate);
         }
+
+        public static int Eliminar(Usuario usuario)  // Elimina el usuario.
+        {
+            var dao = new DAO();
+
+            string sqlDeleteRelacion = @"
+        DELETE FROM Usuario_Perfil 
+        WHERE Usuario_ID = @IdUsuario;";
+
+            SqlParameter[] p1 = {
+            new SqlParameter("@IdUsuario", usuario.Id)
+            };
+
+            dao.ExecuteNonQueryFuntion(sqlDeleteRelacion, p1); // primero la tabla intermedia
+
+            string sqlDeleteUsuario = @"
+        DELETE FROM Usuario 
+        WHERE Usuario_ID = @IdUsuario;";
+
+            SqlParameter[] p2 = {
+        new SqlParameter("@IdUsuario", usuario.Id)
+        };
+
+            int filas = dao.ExecuteNonQueryFuntion(sqlDeleteUsuario, p2);
+
+            return filas;
+        }
+
 
         private static Usuario MapUsuario(DataRow dr)
         {

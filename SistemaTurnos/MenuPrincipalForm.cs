@@ -20,13 +20,6 @@ namespace SistemaTurnos
             InitializeComponent();
         }
 
-        private void bitacoraToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BitacoraForm bitacoraForm = new BitacoraForm();
-            bitacoraForm.MdiParent = this;
-            bitacoraForm.Show();
-        }
-
         private void cambiarClaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CambiarClaveForm cambiarClave = new CambiarClaveForm();
@@ -62,6 +55,27 @@ namespace SistemaTurnos
             {
                 MessageBox.Show(ex.Message, "Desconectarse", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void cambiarClaveToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CambiarClaveForm cambiarClave = new CambiarClaveForm();
+            cambiarClave.MdiParent = this;
+            cambiarClave.Show();
+        }
+
+        private void bitacoraToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            BitacoraForm bitacoraForm = new BitacoraForm();
+            bitacoraForm.MdiParent = this;
+            bitacoraForm.Show();
+        }
+
+        private void gestiónDePerfilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GestionPerfilForm perfilForm = new GestionPerfilForm();
+            perfilForm.MdiParent = this;
+            perfilForm.Show();
         }
     }
 }

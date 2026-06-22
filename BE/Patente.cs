@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace BE
 {
-    public class Patente: Componente
+    public class Patente: Perfil
     {
-        public override void AgregarHijo(Componente c)
+        public override void AgregarHijo(Perfil p)
         {
             throw new NotSupportedException("Una patente no puede tener hijos.");
         }
 
-        public override void QuitarHijo(Componente c)
+        public override void QuitarHijo(Perfil p)
         {
             throw new NotSupportedException("Una patente no puede tener hijos.");
         }

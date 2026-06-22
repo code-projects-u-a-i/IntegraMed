@@ -1,0 +1,296 @@
+﻿using BE;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DAL
+{
+    public class PerfilDAL
+    {
+
+        public static Perfil Obtener(int perfilId)  
+        {
+            DAO dao = new DAO();
+
+            var ds = dao.ExecuteDataSet(
+                "SELECT TOP 1 * FROM Perfil WHERE Perfil_ID = @ID",
+                new SqlParameter("@ID", perfilId)
+            );
+
+            if (ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+                return null;
+
+            return MapPerfil(ds.Tables[0].Rows[0]);
+        }
+
+        public static int CrearPerfil(string nombre,string tipo)  
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                return 0;
+
+            DAO dao = new DAO();
+
+            const string sqlInsert = @"
+            INSERT INTO Perfil (Perfil_Nombre,Perfil_Tipo)
+            VALUES (@N,@T);
+
+            SELECT SCOPE_IDENTITY() AS Id;";
+
+            var ds = dao.ExecuteDataSet(sqlInsert,
+                new SqlParameter("@N", nombre),
+                new SqlParameter("@T", tipo)
+            );
+
+            if (ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+                return 0;
+
+            return Convert.ToInt32(ds.Tables[0].Rows[0]["Id"]);
+        }
+
+        public static List<Perfil> ObtenerTodasFamilias() 
+        {
+            DAO dao = new DAO();
+            var ds = dao.ExecuteDataSet("SELECT * FROM Perfil WHERE Perfil_Tipo LIKE '%Familia%'");
+
+            var list = new List<Perfil>();
+            if (ds.Tables.Count == 0) return list;
+
+            foreach (DataRow r in ds.Tables[0].Rows)
+                list.Add(MapPerfil(r));
+
+            return list;
+        }
+
+        public static List<Perfil> ObtenerTodasPatentes()  
+        {
+            DAO dao = new DAO();
+            var ds = dao.ExecuteDataSet("SELECT * FROM Perfil WHERE Perfil_Tipo LIKE '%Patente%'");
+
+            var list = new List<Perfil>();
+            if (ds.Tables.Count == 0) return list;
+
+            foreach (DataRow r in ds.Tables[0].Rows)
+                list.Add(MapPerfil(r));
+
+            return list;
+        }
+
+        public static List<Perfil> ObtenerRaicesDeUsuario(int usuarioId)  // Obtiene todos los perfiles asignados a un usuario.
+        {
+            DAO dao = new DAO();
+
+            string sql = @"
+            SELECT c.*
+            FROM Usuario_Perfil up
+            JOIN Perfil p ON p.Perfil_ID = up.Perfil_ID
+            WHERE uc.Usuario_ID = @U;";
+
+            var ds = dao.ExecuteDataSet(sql, new SqlParameter("@U", usuarioId));
+
+            var list = new List<Perfil>();
+            if (ds.Tables.Count == 0) return list;
+
+            foreach (DataRow r in ds.Tables[0].Rows)
+                list.Add(MapPerfil(r));
+
+            return list;
+        }
+
+        public static void AsignarComponenteAUsuario(int usuarioId, int perfilId)  //Asigna un perfil (patente/familia) a un usuario si no estaba asignado.
+        {
+            DAO dao = new DAO();
+
+            string sql = @"
+IF NOT EXISTS (SELECT 1 FROM Usuario_Perfil WHERE Usuario_ID=@U AND Perfil_ID=@P)
+    INSERT INTO Usuario_Perfil (Usuario_ID, Perfil_ID)
+    VALUES (@U, @C);";
+
+            dao.ExecuteNonQueryFuntion(sql,
+                new SqlParameter("@U", usuarioId),
+                new SqlParameter("@P", perfilId)
+            );
+        }
+
+        public static void QuitarComponenteDeUsuario(int usuarioId, int perfilId)  //Elimina una asignación entre usuario y perfilId.
+        {
+            DAO dao = new DAO();
+            dao.ExecuteNonQueryFuntion(
+                "DELETE FROM Usuario_Perfil WHERE Usuario_ID=@U AND Perfil_ID=@P",
+                new SqlParameter("@U", usuarioId),
+                new SqlParameter("@P", perfilId)
+            );
+        }
+
+        public static void AgregarHijoAFamilia(int idFamilia, int idHijo)  //Asocia un hijo (perfil) a una familia si no estaba asociado.
+        {
+            DAO dao = new DAO();
+
+            string sql = @"
+            IF NOT EXISTS (SELECT 1 FROM Familia_Hijo WHERE Familia_ID=@F AND Hijo_ID=@H)
+            INSERT INTO Familia_Hijo (Familia_ID, Hijo_ID) VALUES (@F, @H);";
+
+            dao.ExecuteNonQueryFuntion(sql,
+                new SqlParameter("@F", idFamilia),
+                new SqlParameter("@H", idHijo)
+            );
+        }
+
+        public static void QuitarHijoDeFamilia(int idFamilia, int idHijo)  //Elimina la relación hijo → familia.
+        {
+            DAO dao = new DAO();
+            dao.ExecuteNonQueryFuntion(
+                "DELETE FROM Familia_Hijo WHERE Familia_ID=@F AND Hijo_ID=@H",
+                new SqlParameter("@F", idFamilia),
+                new SqlParameter("@H", idHijo)
+            );
+        }
+
+        public static int ObtenerIdFamiliaPorNombre(string nombre)  //Busca el ID de una familia por su nombre.
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                return 0;
+
+            DAO dao = new DAO();
+
+            string sql = @"
+            SELECT TOP 1 Perfil_ID
+            FROM Perfil
+            WHERE RTRIM(LTRIM(Nombre)) = @N
+            AND Tipo = 'Familia';";
+
+            var ds = dao.ExecuteDataSet(sql, new SqlParameter("@N", nombre));
+
+            if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                return Convert.ToInt32(ds.Tables[0].Rows[0]["Perfil_ID"]);
+
+            return 0;
+        }
+
+        public static List<Perfil> ObtenerHijosDeFamilia(int idFamilia)  //Obtiene todos los perfiles hijos de una familia.
+        {
+            DAO dao = new DAO();
+
+            string sql = @"
+            SELECT c.*
+            FROM Familia_Hijo fh
+            JOIN Perfil c ON c.Perfil_ID = fh.Hijo_ID
+            WHERE fh.Familia_ID = @F;";
+
+            var ds = dao.ExecuteDataSet(sql, new SqlParameter("@F", idFamilia));
+
+            var list = new List<Perfil>();
+            if (ds.Tables.Count == 0) return list;
+
+            foreach (DataRow r in ds.Tables[0].Rows)
+                list.Add(MapPerfil(r));
+
+            return list;
+        }
+
+
+        public void QuitarFamiliaAUsuarios(int familiaId)  //Elimina la familia de todos los usuarios que la tengan asignada.
+        {
+            var dao = new DAO();
+            string sql = @"
+            DELETE FROM Usuario_Perfil
+            WHERE Perfil_ID = @familiaId;";
+
+            dao.ExecuteNonQueryFuntion(sql, new SqlParameter("@familiaId", familiaId));
+        }
+
+        public void EliminarTodosLosHijos(int idFamilia)  //Borra todos los hijos asociados a la familia.
+        {
+            var dao = new DAO();
+
+            string sql = @"
+            DELETE FROM Familia_Hijo
+            WHERE Familia_ID = @ID;";
+
+            dao.ExecuteNonQueryFuntion(sql, new SqlParameter("@ID", idFamilia));
+        }
+
+        public void Eliminar(int idFamilia)  //Borra la familia en sí (sin tocar asociaciones previamente).
+        {
+            var dao = new DAO();
+
+            string sql = @"
+            DELETE FROM Perfil
+            WHERE Perfil_ID = @ID AND Tipo = 'Familia';";
+
+            dao.ExecuteNonQueryFuntion(sql, new SqlParameter("@ID", idFamilia));
+        }
+        public static List<Perfil> ObtenerFamiliasRaiz()
+        {
+            DAO dao = new DAO();
+
+            // perfiles tipo Familia cuyo ID NO exista en la columna Hijo_ID de la tabla intermedia
+            string sql = @"
+            SELECT * FROM Perfil 
+            WHERE Perfil_Tipo = 'Familia' 
+            AND Perfil_ID NOT IN (SELECT DISTINCT Hijo_ID FROM Familia_Hijo);";
+
+            var ds = dao.ExecuteDataSet(sql);
+
+            var list = new List<Perfil>();
+            if (ds.Tables.Count == 0) return list;
+
+            foreach (DataRow r in ds.Tables[0].Rows)
+                list.Add(MapPerfil(r));
+
+            return list;
+        }
+
+        private static Perfil MapPerfil(DataRow row)  
+        {
+            int id = Convert.ToInt32(row["Perfil_ID"]);
+            string nombre = row["Perfil_Nombre"].ToString();
+            string tipo = row["Perfil_Tipo"].ToString().Trim();
+
+            Perfil perfil;
+
+            if (tipo.Equals("Patente", StringComparison.OrdinalIgnoreCase))
+                perfil = new Patente();
+            else if (tipo.Equals("Familia", StringComparison.OrdinalIgnoreCase))
+                perfil = new Familia();
+            else
+                throw new InvalidOperationException($"Tipo desconocido: {tipo}");
+
+            perfil.Id = id;
+            perfil.Nombre = nombre;
+
+            return perfil;
+        }
+
+        public static string EliminarPerfil(int id)
+        {
+            DAO dao = new DAO();
+
+            // tiene_hijos, es_hijo, tiene_usuarios son las posibilidades de que no pueda ser borrado
+            string sqlVerificar = @"
+        IF EXISTS (SELECT 1 FROM Familia_Hijo WHERE Familia_ID = @ID)
+            SELECT 'TIENE_HIJOS' AS Estado;
+        ELSE IF EXISTS (SELECT 1 FROM Familia_Hijo WHERE Hijo_ID = @ID)
+            SELECT 'ES_HIJO' AS Estado;
+        ELSE IF EXISTS (SELECT 1 FROM Usuario_Perfil WHERE Perfil_ID = @ID)
+            SELECT 'TIENE_USUARIOS' AS Estado;
+        ELSE
+            SELECT 'LIBRE' AS Estado;";
+
+            var ds = dao.ExecuteDataSet(sqlVerificar, new SqlParameter("@ID", id));
+            string estado = ds.Tables[0].Rows[0]["Estado"].ToString();
+            // si el perfil esta libre entonces no se rompe ninguna integridad referencial
+            if (estado == "LIBRE")
+            {
+                string sqlDelete = "DELETE FROM Perfil WHERE Perfil_ID = @ID;";
+                dao.ExecuteNonQueryFuntion(sqlDelete, new SqlParameter("@ID", id));
+                return "OK";
+            }
+
+            return estado;
+        }
+    }
+}
