@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using BE;
@@ -117,6 +118,26 @@ namespace DAL
             int filas = dao.ExecuteNonQueryFuntion(sqlDeleteUsuario, p2);
 
             return filas;
+        }
+
+        public static List<Usuario> Listar() 
+        {
+            var dao = new DAO();
+
+            string sql = @"
+SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_IntentosFallidos, Usuario_Bloqueado
+FROM Usuario
+ORDER BY Usuario_ID;
+";
+            DataSet ds = dao.ExecuteDataSet(sql);
+            var lista = new List<Usuario>();
+
+            foreach (DataRow dr in ds.Tables[0].Rows)
+            {
+                lista.Add(MapUsuario(dr));
+            }
+
+            return lista;
         }
 
 

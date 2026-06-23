@@ -62,38 +62,6 @@ namespace SistemaTurnos
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(txtNombre.Text) || (rbFamilia.Checked == false && rbPerfilSimple.Checked == false))
-            {
-                MessageBox.Show("Debe ingresar Nombre y tipo paracontinuar", "Faltan datos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            string tipo = rbFamilia.Checked ? "Familia" : "Patente";
-
-            admPermisosService.CrearPerfil(txtNombre.Text, tipo);
-
-            if (rbFamilia.Checked)
-            {
-                ActualizarTreeView();
-                if (treeViewFamilias.SelectedNode != null)
-                {
-                    // Forzar el refresco del Sector B manteniendo el contexto del padre seleccionado
-                    ActualizarTreeViewDisponibles((Familia)treeViewFamilias.SelectedNode.Tag);
-                }
-            }
-            else
-            {
-                if (treeViewFamilias.SelectedNode != null)
-                {
-                    ActualizarTreeViewDisponibles((Familia)treeViewFamilias.SelectedNode.Tag);
-                }
-            }
-            
-            LimpiarIngresos();
-        }
-
         private void ActualizarTreeView()
         {
             treeViewFamilias.Nodes.Clear();
@@ -133,17 +101,6 @@ namespace SistemaTurnos
             }
         }
 
-        private void btnLimpiar_Click(object sender, EventArgs e)
-        {
-            LimpiarIngresos();
-        }
-
-        private void LimpiarIngresos()
-        {
-            txtNombre.Clear();
-            rbPerfilSimple.Checked = false;
-            rbFamilia.Checked = false;
-        }
 
         private void treeViewFamilias_AfterSelect(object sender, TreeViewEventArgs e)
         {
@@ -219,7 +176,7 @@ namespace SistemaTurnos
             // 3. GROUPBOXES (Contenedores)
             // ==========================================
             // Nota: Cambiá los nombres por los que tengan tus GroupBoxes reales
-            var groupBoxes = new GroupBox[] { groupBoxArbol, groupBoxAlta, groupBoxArbolEdicion };
+            var groupBoxes = new GroupBox[] { groupBoxArbol, groupBoxArbolEdicion };
             foreach (var gb in groupBoxes)
             {
                 if (gb != null)
@@ -250,22 +207,10 @@ namespace SistemaTurnos
                 treeViewPerfilesPosibles.BorderStyle = BorderStyle.FixedSingle;
             }
 
-            // Caja de texto (TextBox)
-            if (txtNombre != null)
-            {
-                txtNombre.BackColor = fondoControles;
-                txtNombre.ForeColor = textoClaro;
-                txtNombre.BorderStyle = BorderStyle.FixedSingle;
-            }
-
-            // Etiquetas (Labels) internas
-            // En WinForms los labels heredan del GroupBox, así que los forzamos a texto claro
-            labelNombre.ForeColor = textoClaro;
-
             // ==========================================
             // 5. BOTONES PRINCIPALES (Estilo "Actualizar Contraseña")
             // ==========================================
-            var botonesPrincipales = new Button[] { btnGuardarPerfil, btnAgregarHijo , btnEliminar};
+            var botonesPrincipales = new Button[] { btnAgregarHijo };
             foreach (var btn in botonesPrincipales)
             {
                 if (btn != null)
@@ -281,7 +226,7 @@ namespace SistemaTurnos
             // ==========================================
             // 6. BOTONES SECUNDARIOS (Estilo "Cancelar")
             // ==========================================
-            var botonesSecundarios = new Button[] { btnLimpiar, btnQuitarHijo };
+            var botonesSecundarios = new Button[] { btnQuitarHijo };
             foreach (var btn in botonesSecundarios)
             {
                 if (btn != null)
@@ -294,50 +239,6 @@ namespace SistemaTurnos
                     btn.Font = fuenteBotones;
                 }
             }
-        }
-
-        private void btnEliminar_Click(object sender, EventArgs e)
-        {
-            // condicion: NO SE PUEDE ELIMINAR UN PERFIL QUE ESTA SIENDO UTILIZADO POR UN USUARIO, ni tampoco que sea hijo de un perfil ni que sea padre de otros
-            // solo se puede borrar perfiles que no estan asignados a otro perfil y que no esten asignados a un usuario para preservar la integridad referencial en bd
-           //  treeview sector derecha
-            if (treeViewPerfilesPosibles.SelectedNode == null)
-            {
-                MessageBox.Show("Por favor, seleccione en la lista de disponibles (Sector B) el perfil que desea eliminar físicamente del sistema.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            Perfil perfilAEliminar = (Perfil)treeViewPerfilesPosibles.SelectedNode.Tag;
-
-
-            DialogResult result = MessageBox.Show($"¿Está seguro de que desea eliminar definitivamente el perfil '{perfilAEliminar.Nombre}' del sistema?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.No) return;
-
-            try
-            {
-                admPermisosService.EliminarPerfil(perfilAEliminar.Id);
-              
-                MessageBox.Show("Perfil eliminado de la base de datos con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
-                LimpiarIngresos();
-
-                ActualizarTreeView(); // Refresca el Sector A
-
-                // Refrescar el Sector B manteniendo el contexto del padre seleccionado en A
-                if (treeViewFamilias.SelectedNode != null)
-                {
-                    ActualizarTreeViewDisponibles((Familia)treeViewFamilias.SelectedNode.Tag);
-                }
-                else
-                {
-                    treeViewPerfilesPosibles.Nodes.Clear();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }        
         }
 
         private void btnAgregarHijo_Click(object sender, EventArgs e)
@@ -388,7 +289,7 @@ namespace SistemaTurnos
         {
             if (treeViewFamilias.SelectedNode == null)
             {
-                MessageBox.Show("Seleccione el componente hijo que desea quitar directamente desde el árbol (Sector A).", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Seleccione el componente hijo que desea quitar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -436,11 +337,6 @@ namespace SistemaTurnos
             {
                 MessageBox.Show($"Error al desvincular componentes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void GestionPerfilForm_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

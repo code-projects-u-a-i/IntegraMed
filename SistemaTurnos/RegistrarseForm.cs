@@ -62,17 +62,6 @@ namespace SistemaTurnos
             this.Text = "Sistema Sagrado Corazón- Registrarme";
 
 
-            panelLogin.BackColor = Color.FromArgb(40, 50, 55);
-            panelLogin.Size = new Size(350, 400);
-            panelLogin.BorderStyle = BorderStyle.None;
-
-
-            panelLogin.Location = new Point(
-                (this.ClientSize.Width - panelLogin.Width) / 2,
-                (this.ClientSize.Height - panelLogin.Height) / 2
-            );
-
-
             label3.ForeColor = Color.White;
             label3.Font = new Font("Segoe UI", 16, FontStyle.Bold);
 
@@ -106,24 +95,8 @@ namespace SistemaTurnos
             button1.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             button1.Cursor = Cursors.Hand;
 
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.FlatAppearance.BorderSize = 1;
-            button2.BackColor = Color.Transparent;
-            button2.ForeColor = Color.FromArgb(100, 110, 120);
-            button2.FlatAppearance.BorderColor = Color.FromArgb(180, 185, 190);
-            button2.Font = new Font("Segoe UI", 8, FontStyle.Bold);
-            button2.Cursor = Cursors.Hand;
-
 
             this.AcceptButton = button1;
-        }
-        //volver
-        private void button2_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            Form1 menu = new Form1();
-            menu.ShowDialog();
-            this.Close();
         }
     }
 }

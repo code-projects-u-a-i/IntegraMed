@@ -135,14 +135,6 @@ namespace SistemaTurnosUI
             button1.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             button1.Cursor = Cursors.Hand;
 
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.FlatAppearance.BorderSize = 1;
-            button2.BackColor = Color.Transparent;
-            button2.ForeColor = Color.FromArgb(100, 110, 120);
-            button2.FlatAppearance.BorderColor = Color.FromArgb(180, 185, 190);
-            button2.Font = new Font("Segoe UI", 8, FontStyle.Bold);
-            button2.Cursor = Cursors.Hand;
-
 
             this.AcceptButton = button1;
         }

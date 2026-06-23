@@ -52,9 +52,19 @@ namespace BLL
            return PerfilDAL.ObtenerTodasPatentes();
         }
 
+        public List<Perfil> ObtenerTodosLosPerfiles(int id)
+        {
+            return PerfilDAL.ListarPerfilesDisponiblesParaAsignar(id);
+        }
+
         public void QuitarHijoDeFamilia(int idPadre, int idHijo)
         {
             PerfilDAL.QuitarHijoDeFamilia(idPadre, idHijo);
+        }
+
+        public List<Perfil> ListarPerfiles()
+        {
+            return PerfilDAL.Listar();
         }
         
         private string EvaluarRta(string rta)
@@ -74,6 +84,66 @@ namespace BLL
                     return rta;
                 default: throw new Exception("No se pudo eliminar el perfil");
             }
+        }
+        public void AsignarRolAUsuario(int idUsuario, int idFamilia)
+        {
+            PerfilDAL.AsignarComponenteAUsuario(idUsuario, idFamilia);  // Versión específica para asignar solo roles (familias).
+        }
+        public List<Perfil> ObtenerArbolUsuario(int usuarioId)  // Devuelve todos los perfiles raíz (permisos asignados al usuario) con sus árboles completos.
+        {
+            var raices = PerfilDAL.ObtenerRaicesDeUsuario(usuarioId);
+            var list = new List<Perfil>();
+
+            foreach (var raiz in raices)
+            {
+                var sub = ConstruirArbol(raiz.Id);
+                if (sub != null)
+                    list.Add(sub);
+            }
+
+            return list;
+        }
+
+        public Perfil ConstruirArbol(int perfilId)  // Construye el árbol completo de un rol/familia a partir de un ID, evitando ciclos.
+        {
+            HashSet<int> componentesVisitados = new HashSet<int>();
+            return ConstruirArbolInterno(perfilId, componentesVisitados);
+        }
+
+        private Perfil ConstruirArbolInterno(int perfilId, HashSet<int> componentesVisitados)  // Versión recursiva. Obtiene un componente y carga todos sus hijos.
+        {
+            if (componentesVisitados.Contains(perfilId))
+                return null;
+
+            componentesVisitados.Add(perfilId);
+
+            Perfil perfil = PerfilDAL.Obtener(perfilId);
+            if (perfil == null)
+                return null;
+
+            var familia = perfil as Familia;
+            if (familia != null)
+            {
+                var hijos = PerfilDAL.ObtenerHijosDeFamilia(familia.Id);
+                foreach (var hijo in hijos)
+                {
+                    var sub = ConstruirArbolInterno(hijo.Id, componentesVisitados);
+                    if (sub != null)
+                        familia.AgregarHijo(sub);
+                }
+            }
+
+            return perfil;
+        }
+
+        public void QuitarPerfilAUsuario(int usuario, int perfil)
+        {
+            PerfilDAL.QuitarComponenteDeUsuario(usuario, perfil);
+        }
+
+        public void EditarPerfil(int id, string nombre)
+        {
+            PerfilDAL.EditarPerfil(id, nombre);
         }
     }
 }

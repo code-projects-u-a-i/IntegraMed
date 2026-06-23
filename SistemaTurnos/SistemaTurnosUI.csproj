@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsignarPerfilesUsuarioForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AsignarPerfilesUsuarioForm.Designer.cs">
+      <DependentUpon>AsignarPerfilesUsuarioForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="BitacoraForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -57,6 +63,12 @@
     </Compile>
     <Compile Include="CambiarClaveForm.Designer.cs">
       <DependentUpon>CambiarClaveForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AdministrarPerfilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdministrarPerfilesForm.Designer.cs">
+      <DependentUpon>AdministrarPerfilesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -84,11 +96,17 @@
     <Compile Include="RegistrarseForm.Designer.cs">
       <DependentUpon>RegistrarseForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AsignarPerfilesUsuarioForm.resx">
+      <DependentUpon>AsignarPerfilesUsuarioForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="BitacoraForm.resx">
       <DependentUpon>BitacoraForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CambiarClaveForm.resx">
       <DependentUpon>CambiarClaveForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdministrarPerfilesForm.resx">
+      <DependentUpon>AdministrarPerfilesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

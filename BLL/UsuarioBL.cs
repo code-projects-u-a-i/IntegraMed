@@ -3,6 +3,7 @@ using BLL.Servicios;
 using DAL;
 using Seguridad;
 using System;
+using System.Collections.Generic;
 
 namespace BLL
 {
@@ -70,6 +71,11 @@ namespace BLL
                 throw new Exception("Ya existe un usuario con ese nombre, por favor intente con otro nombre");
             }
 
+        }
+
+        public  List<Usuario> ObtenerUsuarios()
+        {
+            return UsuarioDAL.Listar();
         }
     }
 }

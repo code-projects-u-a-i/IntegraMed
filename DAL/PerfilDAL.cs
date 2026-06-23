@@ -51,6 +51,20 @@ namespace DAL
             return Convert.ToInt32(ds.Tables[0].Rows[0]["Id"]);
         }
 
+        public static List<Perfil> Listar()
+        {
+            DAO dao = new DAO();
+            var ds = dao.ExecuteDataSet("SELECT * FROM Perfil");
+
+            var list = new List<Perfil>();
+            if (ds.Tables.Count == 0) return list;
+
+            foreach (DataRow r in ds.Tables[0].Rows)
+                list.Add(MapPerfil(r));
+
+            return list;
+        }
+
         public static List<Perfil> ObtenerTodasFamilias() 
         {
             DAO dao = new DAO();
@@ -84,10 +98,10 @@ namespace DAL
             DAO dao = new DAO();
 
             string sql = @"
-            SELECT c.*
+            SELECT p.*
             FROM Usuario_Perfil up
             JOIN Perfil p ON p.Perfil_ID = up.Perfil_ID
-            WHERE uc.Usuario_ID = @U;";
+            WHERE up.Usuario_ID = @U;";
 
             var ds = dao.ExecuteDataSet(sql, new SqlParameter("@U", usuarioId));
 
@@ -107,7 +121,7 @@ namespace DAL
             string sql = @"
 IF NOT EXISTS (SELECT 1 FROM Usuario_Perfil WHERE Usuario_ID=@U AND Perfil_ID=@P)
     INSERT INTO Usuario_Perfil (Usuario_ID, Perfil_ID)
-    VALUES (@U, @C);";
+    VALUES (@U, @P);";
 
             dao.ExecuteNonQueryFuntion(sql,
                 new SqlParameter("@U", usuarioId),
@@ -287,10 +301,56 @@ IF NOT EXISTS (SELECT 1 FROM Usuario_Perfil WHERE Usuario_ID=@U AND Perfil_ID=@P
             {
                 string sqlDelete = "DELETE FROM Perfil WHERE Perfil_ID = @ID;";
                 dao.ExecuteNonQueryFuntion(sqlDelete, new SqlParameter("@ID", id));
-                return "OK";
+                return estado;
             }
 
             return estado;
         }
+
+        public static void EditarPerfil(int id, string nombre)
+        {
+            var dao = new DAO();
+
+            string sql = @"UPDATE Perfil 
+                   SET Perfil_Nombre = @N 
+                   WHERE Perfil_ID = @Id;";
+
+            dao.ExecuteNonQueryFuntion(sql,
+                new SqlParameter("@N", nombre),
+                new SqlParameter("@Id", id)
+            );
+        }
+        public static List<Perfil> ListarPerfilesDisponiblesParaAsignar(int usuarioId)
+        {
+            DAO dao = new DAO();
+
+            // la consulta crea una tabla virtual, donde primero selecciona los perfiles raiz que tiene el usuario y despues lee la tabla Familia_Hijo para buscar de forma recursiva hacia abajo (desde hijo_id)
+            string sql = @"
+        WITH PermisosDelUsuario AS (
+            SELECT Perfil_ID FROM Usuario_Perfil WHERE Usuario_ID = @UsuarioID
+            UNION ALL
+            SELECT fh.Hijo_ID
+            FROM Familia_Hijo fh
+            JOIN PermisosDelUsuario pu ON fh.Familia_ID = pu.Perfil_ID
+        )
+        SELECT DISTINCT p.Perfil_ID, p.Perfil_Nombre, p.Perfil_Tipo
+        FROM Perfil p
+        WHERE p.Perfil_ID NOT IN (SELECT Perfil_ID FROM PermisosDelUsuario);";
+            // al final la consulta lista los perfiles que no existan en la tabla virtual permisosDelUsuario
+            var ds = dao.ExecuteDataSet(sql, new SqlParameter("@UsuarioID", usuarioId));
+            List<Perfil> listaFiltrada = new List<Perfil>();
+
+            if (ds.Tables.Count == 0) return listaFiltrada;
+
+            foreach (DataRow r in ds.Tables[0].Rows)
+            {
+                // Tu mapeador polimórfico genera instancias limpias de Familia o Patente
+                listaFiltrada.Add(MapPerfil(r));
+            }
+
+            return listaFiltrada;
+        }
+
+       
     }
 }

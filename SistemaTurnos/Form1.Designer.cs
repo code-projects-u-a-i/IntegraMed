@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.panelLogin = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -42,7 +41,6 @@
             // 
             // panelLogin
             // 
-            this.panelLogin.Controls.Add(this.button2);
             this.panelLogin.Controls.Add(this.button1);
             this.panelLogin.Controls.Add(this.textBox2);
             this.panelLogin.Controls.Add(this.textBox1);
@@ -54,16 +52,6 @@
             this.panelLogin.Name = "panelLogin";
             this.panelLogin.Size = new System.Drawing.Size(342, 316);
             this.panelLogin.TabIndex = 0;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(55, 273);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(207, 23);
-            this.button2.TabIndex = 7;
-            this.button2.Text = "Registrarme";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button1
             // 
@@ -149,7 +137,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button2;
     }
 }
 

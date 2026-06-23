@@ -30,13 +30,18 @@
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.usuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cerrarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cambiarClaveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.bitacoraToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.gestiónDeUsuariosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gestiónDePerfilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.desbloqueoDeUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.accionesDeUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.desbloqueoDeUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gestiónDePerfilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.administrarPerfilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.asignarPerfilesAUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bitacoraToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.cambiarClaveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.cerrarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eliminarPerfilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.crearUsuariosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gestionarIdiomaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,6 +51,7 @@
             this.usuarioToolStripMenuItem,
             this.bitacoraToolStripMenuItem1,
             this.cambiarClaveToolStripMenuItem1,
+            this.gestionarIdiomaToolStripMenuItem,
             this.cerrarSesionToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -62,19 +68,51 @@
             this.usuarioToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.usuarioToolStripMenuItem.Text = "Usuario";
             // 
-            // cerrarSesionToolStripMenuItem
+            // gestiónDeUsuariosToolStripMenuItem
             // 
-            this.cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
-            this.cerrarSesionToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
-            this.cerrarSesionToolStripMenuItem.Text = "Cerrar Sesion";
-            this.cerrarSesionToolStripMenuItem.Click += new System.EventHandler(this.cerrarSesionToolStripMenuItem_Click);
+            this.gestiónDeUsuariosToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.accionesDeUsuarioToolStripMenuItem,
+            this.desbloqueoDeUsuarioToolStripMenuItem,
+            this.crearUsuariosToolStripMenuItem});
+            this.gestiónDeUsuariosToolStripMenuItem.Name = "gestiónDeUsuariosToolStripMenuItem";
+            this.gestiónDeUsuariosToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gestiónDeUsuariosToolStripMenuItem.Text = "Gestión de Usuarios";
             // 
-            // cambiarClaveToolStripMenuItem1
+            // accionesDeUsuarioToolStripMenuItem
             // 
-            this.cambiarClaveToolStripMenuItem1.Name = "cambiarClaveToolStripMenuItem1";
-            this.cambiarClaveToolStripMenuItem1.Size = new System.Drawing.Size(96, 20);
-            this.cambiarClaveToolStripMenuItem1.Text = "Cambiar Clave";
-            this.cambiarClaveToolStripMenuItem1.Click += new System.EventHandler(this.cambiarClaveToolStripMenuItem1_Click);
+            this.accionesDeUsuarioToolStripMenuItem.Name = "accionesDeUsuarioToolStripMenuItem";
+            this.accionesDeUsuarioToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.accionesDeUsuarioToolStripMenuItem.Text = "Administrar Usuario";
+            // 
+            // desbloqueoDeUsuarioToolStripMenuItem
+            // 
+            this.desbloqueoDeUsuarioToolStripMenuItem.Name = "desbloqueoDeUsuarioToolStripMenuItem";
+            this.desbloqueoDeUsuarioToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.desbloqueoDeUsuarioToolStripMenuItem.Text = "Desbloqueo de Usuario";
+            // 
+            // gestiónDePerfilesToolStripMenuItem
+            // 
+            this.gestiónDePerfilesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.eliminarPerfilesToolStripMenuItem,
+            this.administrarPerfilesToolStripMenuItem,
+            this.asignarPerfilesAUsuarioToolStripMenuItem});
+            this.gestiónDePerfilesToolStripMenuItem.Name = "gestiónDePerfilesToolStripMenuItem";
+            this.gestiónDePerfilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gestiónDePerfilesToolStripMenuItem.Text = "Gestión de Perfiles";
+            // 
+            // administrarPerfilesToolStripMenuItem
+            // 
+            this.administrarPerfilesToolStripMenuItem.Name = "administrarPerfilesToolStripMenuItem";
+            this.administrarPerfilesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.administrarPerfilesToolStripMenuItem.Text = "Asignar Familias de Permisos";
+            this.administrarPerfilesToolStripMenuItem.Click += new System.EventHandler(this.administrarPerfilesToolStripMenuItem_Click_1);
+            // 
+            // asignarPerfilesAUsuarioToolStripMenuItem
+            // 
+            this.asignarPerfilesAUsuarioToolStripMenuItem.Name = "asignarPerfilesAUsuarioToolStripMenuItem";
+            this.asignarPerfilesAUsuarioToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.asignarPerfilesAUsuarioToolStripMenuItem.Text = "Asignar Perfiles a Usuario";
+            this.asignarPerfilesAUsuarioToolStripMenuItem.Click += new System.EventHandler(this.asignarPerfilesAUsuarioToolStripMenuItem_Click);
             // 
             // bitacoraToolStripMenuItem1
             // 
@@ -83,33 +121,39 @@
             this.bitacoraToolStripMenuItem1.Text = "Bitacora";
             this.bitacoraToolStripMenuItem1.Click += new System.EventHandler(this.bitacoraToolStripMenuItem1_Click);
             // 
-            // gestiónDeUsuariosToolStripMenuItem
+            // cambiarClaveToolStripMenuItem1
             // 
-            this.gestiónDeUsuariosToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.accionesDeUsuarioToolStripMenuItem,
-            this.desbloqueoDeUsuarioToolStripMenuItem});
-            this.gestiónDeUsuariosToolStripMenuItem.Name = "gestiónDeUsuariosToolStripMenuItem";
-            this.gestiónDeUsuariosToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.gestiónDeUsuariosToolStripMenuItem.Text = "Gestión de Usuarios";
+            this.cambiarClaveToolStripMenuItem1.Name = "cambiarClaveToolStripMenuItem1";
+            this.cambiarClaveToolStripMenuItem1.Size = new System.Drawing.Size(96, 20);
+            this.cambiarClaveToolStripMenuItem1.Text = "Cambiar Clave";
+            this.cambiarClaveToolStripMenuItem1.Click += new System.EventHandler(this.cambiarClaveToolStripMenuItem1_Click);
             // 
-            // gestiónDePerfilesToolStripMenuItem
+            // cerrarSesionToolStripMenuItem
             // 
-            this.gestiónDePerfilesToolStripMenuItem.Name = "gestiónDePerfilesToolStripMenuItem";
-            this.gestiónDePerfilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.gestiónDePerfilesToolStripMenuItem.Text = "Gestión de Perfiles";
-            this.gestiónDePerfilesToolStripMenuItem.Click += new System.EventHandler(this.gestiónDePerfilesToolStripMenuItem_Click);
+            this.cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
+            this.cerrarSesionToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
+            this.cerrarSesionToolStripMenuItem.Text = "Cerrar Sesion";
+            this.cerrarSesionToolStripMenuItem.Click += new System.EventHandler(this.cerrarSesionToolStripMenuItem_Click);
             // 
-            // desbloqueoDeUsuarioToolStripMenuItem
+            // eliminarPerfilesToolStripMenuItem
             // 
-            this.desbloqueoDeUsuarioToolStripMenuItem.Name = "desbloqueoDeUsuarioToolStripMenuItem";
-            this.desbloqueoDeUsuarioToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
-            this.desbloqueoDeUsuarioToolStripMenuItem.Text = "Desbloqueo de Usuario";
+            this.eliminarPerfilesToolStripMenuItem.Name = "eliminarPerfilesToolStripMenuItem";
+            this.eliminarPerfilesToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+            this.eliminarPerfilesToolStripMenuItem.Text = "Gestionar Perfiles";
+            this.eliminarPerfilesToolStripMenuItem.Click += new System.EventHandler(this.eliminarPerfilesToolStripMenuItem_Click);
             // 
-            // accionesDeUsuarioToolStripMenuItem
+            // crearUsuariosToolStripMenuItem
             // 
-            this.accionesDeUsuarioToolStripMenuItem.Name = "accionesDeUsuarioToolStripMenuItem";
-            this.accionesDeUsuarioToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
-            this.accionesDeUsuarioToolStripMenuItem.Text = "Acciones de Usuario";
+            this.crearUsuariosToolStripMenuItem.Name = "crearUsuariosToolStripMenuItem";
+            this.crearUsuariosToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.crearUsuariosToolStripMenuItem.Text = "Crear Usuarios";
+            this.crearUsuariosToolStripMenuItem.Click += new System.EventHandler(this.crearUsuariosToolStripMenuItem_Click);
+            // 
+            // gestionarIdiomaToolStripMenuItem
+            // 
+            this.gestionarIdiomaToolStripMenuItem.Name = "gestionarIdiomaToolStripMenuItem";
+            this.gestionarIdiomaToolStripMenuItem.Size = new System.Drawing.Size(109, 20);
+            this.gestionarIdiomaToolStripMenuItem.Text = "Gestionar Idioma";
             // 
             // MenuPrincipalForm
             // 
@@ -140,5 +184,10 @@
         private System.Windows.Forms.ToolStripMenuItem gestiónDePerfilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem desbloqueoDeUsuarioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem accionesDeUsuarioToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem administrarPerfilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem asignarPerfilesAUsuarioToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem eliminarPerfilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem crearUsuariosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gestionarIdiomaToolStripMenuItem;
     }
 }

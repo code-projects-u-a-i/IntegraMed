@@ -70,12 +70,33 @@ namespace SistemaTurnos
             bitacoraForm.MdiParent = this;
             bitacoraForm.Show();
         }
-
-        private void gestiónDePerfilesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void administrarPerfilesToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             GestionPerfilForm perfilForm = new GestionPerfilForm();
             perfilForm.MdiParent = this;
             perfilForm.Show();
+        }
+
+        private void asignarPerfilesAUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AsignarPerfilesUsuarioForm perfilForm = new AsignarPerfilesUsuarioForm();
+            perfilForm.MdiParent = this;
+            perfilForm.Show();
+        }
+
+        private void eliminarPerfilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AdministrarPerfilesForm eliminarPerfiles = new AdministrarPerfilesForm();
+            eliminarPerfiles.MdiParent = this;
+            eliminarPerfiles.Show();
+        }
+
+        private void crearUsuariosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            RegistrarseForm menu = new RegistrarseForm();
+            menu.ShowDialog();
+            this.Close();
         }
     }
 }
