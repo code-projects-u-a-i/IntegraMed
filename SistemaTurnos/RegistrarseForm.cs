@@ -1,4 +1,5 @@
-﻿using BLL;
+﻿using BE;
+using BLL;
 using BLL.Servicios;
 using SistemaTurnosUI;
 using System;
@@ -15,40 +16,89 @@ namespace SistemaTurnos
 {
     public partial class RegistrarseForm : Form
     {
+        AdministrarPermisosService admPermisosService = new AdministrarPermisosService();
         public RegistrarseForm()
         {
             InitializeComponent();
             this.Load += new System.EventHandler(this.RegistrarseForm_Load);
+
         }
         private UsuarioBL usuarioBL = new UsuarioBL();
         private void RegistrarseForm_Load(object sender, EventArgs e)
         {
-            ConfigurarEstilo();
+            ActualizarTreeViewFamilias();
+            //ConfigurarEstilo();
         }
+
+        private void ActualizarTreeViewFamilias()
+        {
+            treeView1.Nodes.Clear();
+
+            // familias "Raíz" (las que no son hijas de nadie)
+            List<Perfil> familiasRaiz = admPermisosService.ObtenerFamiliasRaiz();
+
+            foreach (var f in familiasRaiz)
+            {
+                TreeNode nodoRaiz = new TreeNode(f.Nombre);
+                nodoRaiz.Tag = f;
+                treeView1.Nodes.Add(nodoRaiz);
+
+                // cargamos los hijos con info de la base de datos de forma recursiva
+                CargarHijosRecursivos(nodoRaiz, (Familia)f);
+            }
+        }
+
+        private void CargarHijosRecursivos(TreeNode nodoPadre, Familia familiaPadre)
+        {
+            // Buscamos los hijos de esta familia en la BD 
+            List<Perfil> hijos = admPermisosService.ObtenerHijosDeFamilia(familiaPadre.Id);
+
+            foreach (var hijo in hijos)
+            {
+                familiaPadre.AgregarHijo(hijo);
+
+                TreeNode nodoHijo = new TreeNode(hijo.Nombre);
+                nodoHijo.Tag = hijo;
+                nodoPadre.Nodes.Add(nodoHijo);
+
+                // Si el hijo es otra familia, se carga de forma recursiva
+                if (hijo is Familia subFamilia)
+                {
+                    CargarHijosRecursivos(nodoHijo, subFamilia);
+                }
+            }
+        }
+
+
         // registrarse
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text.Length > 0 && textBox2.Text.Length > 0)
+            if(treeView1.SelectedNode == null)
             {
-                try
-                {
-                    usuarioBL.CrearUsuario(textBox1.Text, textBox2.Text);
-                    MessageBox.Show("¡Usuario creado con Exito!", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    this.Hide();
-                    Form1 menu = new Form1();
-                    menu.ShowDialog();
-                    this.Close();
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                MessageBox.Show("Debe seleccionar un perfil para asignar al usuario nuevo");
+                return;
             }
-            else
+
+            if (textBox1.Text.Length == 0 || textBox2.Text.Length == 0 || textBox3.Text.Length == 0)
             {
-                MessageBox.Show("Debe ingresar usuario y contraseña para continuar");
+                MessageBox.Show("Debe ingresar usuario, contraseña y mail para continuar");
+                return;
+            }
+
+
+            try
+            {
+                int id = usuarioBL.CrearUsuario(textBox1.Text, textBox2.Text, textBox3.Text);
+
+                Perfil perfilPadre = (Perfil)treeView1.SelectedNode.Tag;
+                admPermisosService.AsignarRolAUsuario(id, perfilPadre.Id);
+
+                MessageBox.Show("¡Usuario creado con Exito!", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void ConfigurarEstilo()

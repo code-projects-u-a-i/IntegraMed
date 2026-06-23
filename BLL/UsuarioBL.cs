@@ -46,7 +46,7 @@ namespace BLL
             
         }
 
-        public void CrearUsuario(string username, string password)
+        public int CrearUsuario(string username, string password, string mail)
         {
             
             Usuario usuario = ObtenerPorNombre(username);
@@ -57,7 +57,7 @@ namespace BLL
                 string hashedPassw =crypto.HashMD5(password);
                 
                 // creo objeto con 0 intentos y false no bloqueado
-                usuario = new Usuario(username, hashedPassw);
+                usuario = new Usuario(username, hashedPassw, mail);
 
                 // guardo en base
                 int ultimoID = UsuarioDAL.InsertarUsuario(usuario);
@@ -65,6 +65,7 @@ namespace BLL
                 // bitacora
                 BitacoraBL bitacora = new BitacoraBL();
                 bitacora.IngresarBitacora(ultimoID, username, "Nuevo Usuario", "usuario creado con exito", "", SeveridadLog.Info);
+                return ultimoID;
             }
             else
             {

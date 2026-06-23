@@ -1,6 +1,6 @@
 ﻿namespace SistemaTurnosUI
 {
-    partial class Form1
+    partial class Login
     {
         /// <summary>
         /// Required designer variable.
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panelLogin = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -36,6 +37,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.panelLogin.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,6 +61,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(207, 39);
             this.button1.TabIndex = 6;
+            this.button1.Tag = "loginBtnIniciar";
             this.button1.Text = "Iniciar Sesion";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -84,6 +87,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(203, 13);
             this.label4.TabIndex = 3;
+            this.label4.Tag = "loginSubtitulo";
             this.label4.Text = "Introduce tus credenciales para continuar";
             // 
             // label3
@@ -93,6 +97,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(92, 13);
             this.label3.TabIndex = 2;
+            this.label3.Tag = "LoginTitulo";
             this.label3.Text = "Sagrado Corazón ";
             // 
             // label2
@@ -102,6 +107,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(61, 13);
             this.label2.TabIndex = 1;
+            this.label2.Tag = "loginPass";
             this.label2.Text = "Contraseña";
             // 
             // label1
@@ -111,15 +117,22 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(81, 13);
             this.label1.TabIndex = 0;
+            this.label1.Tag = "loginNombre";
             this.label1.Text = "Nombre usuario";
             // 
-            // Form1
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(541, 438);
+            this.ClientSize = new System.Drawing.Size(510, 401);
             this.Controls.Add(this.panelLogin);
-            this.Name = "Form1";
+            this.Name = "Login";
+            this.Tag = "login";
             this.Text = "Form1";
             this.panelLogin.ResumeLayout(false);
             this.panelLogin.PerformLayout();
@@ -137,6 +150,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }
 

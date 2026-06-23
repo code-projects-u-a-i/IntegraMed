@@ -16,18 +16,21 @@ namespace DAL
 
             string userEsc = dao.Esc(nuevoUsuario.Username);
             string passEsc = dao.Esc(nuevoUsuario.Password);
+            string mailEsc = dao.Esc(nuevoUsuario.Mail);
 
             // Seteamos explícitamente IntentosFallidos en 0 y Bloqueado en 0 para el alta
             string sqlInsert = $@"
             INSERT INTO Usuario (
                 Usuario_Username,
                 Usuario_Password,
+                Usuario_Mail,
                 Usuario_IntentosFallidos,
                 Usuario_Bloqueado
             )
             VALUES (
                 N'{userEsc}',
                 '{passEsc}',
+                '{mailEsc}',
                 0,
                 0
             );
@@ -49,7 +52,7 @@ namespace DAL
             var dao = new DAO();
 
             string sql = $@"
-            SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_IntentosFallidos, Usuario_Bloqueado
+            SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_Mail ,Usuario_IntentosFallidos, Usuario_Bloqueado
             FROM Usuario
             WHERE Usuario_ID = {id};";
 
@@ -66,7 +69,7 @@ namespace DAL
             var dao = new DAO();
 
             string sql = $@"
-            SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_IntentosFallidos, Usuario_Bloqueado
+            SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_Mail,Usuario_IntentosFallidos, Usuario_Bloqueado
             FROM Usuario
             WHERE Usuario_Username = N'{dao.Esc(username)}';";
 
@@ -86,6 +89,7 @@ namespace DAL
             UPDATE Usuario SET
                 Usuario_Username = N'{dao.Esc(usuario.Username)}',
                 Usuario_Password = N'{dao.Esc(usuario.Password)}',
+                Usuario_Mail,= N'{dao.Esc(usuario.Mail)}',
                 Usuario_IntentosFallidos = {usuario.IntentosFallidos},
                 Usuario_Bloqueado = {dao.BoolToBit(usuario.Bloqueado)}
             WHERE Usuario_ID = {usuario.Id};";
@@ -125,7 +129,7 @@ namespace DAL
             var dao = new DAO();
 
             string sql = @"
-SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_IntentosFallidos, Usuario_Bloqueado
+SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_Mail ,Usuario_IntentosFallidos, Usuario_Bloqueado
 FROM Usuario
 ORDER BY Usuario_ID;
 ";
@@ -148,6 +152,7 @@ ORDER BY Usuario_ID;
                 Id = Convert.ToInt32(dr["Usuario_ID"]),
                 Username = dr["Usuario_Username"] != DBNull.Value ? dr["Usuario_Username"].ToString() : string.Empty,
                 Password = dr["Usuario_Password"] != DBNull.Value ? dr["Usuario_Password"].ToString() : string.Empty,
+                Mail = dr["Usuario_Mail"] != DBNull.Value ? dr["Usuario_Mail"].ToString() : string.Empty,
                 IntentosFallidos = dr["Usuario_IntentosFallidos"] != DBNull.Value ? Convert.ToInt32(dr["Usuario_IntentosFallidos"]) : 0,
                 Bloqueado = dr["Usuario_Bloqueado"] != DBNull.Value && Convert.ToBoolean(dr["Usuario_Bloqueado"])
             };

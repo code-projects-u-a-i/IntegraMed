@@ -7,6 +7,7 @@ namespace BE
         public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public string Mail { get; set; }
         public int IntentosFallidos { get; set; }
         public bool Bloqueado { get; set; }
 
@@ -14,10 +15,11 @@ namespace BE
 
         public Usuario() { }
 
-        public Usuario( string username, string password) // hay que agregar el mail y el dvh
+        public Usuario( string username, string password, string mail) // hay que agregar el dvh
         {
             Username = username;
             Password = password;
+            Mail = mail;
             IntentosFallidos = 0;
             Bloqueado = false;
         }

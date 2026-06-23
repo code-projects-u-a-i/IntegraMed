@@ -87,9 +87,9 @@ namespace BLL
         }
         public void AsignarRolAUsuario(int idUsuario, int idFamilia)
         {
-            PerfilDAL.AsignarComponenteAUsuario(idUsuario, idFamilia);  // Versión específica para asignar solo roles (familias).
+            PerfilDAL.AsignarComponenteAUsuario(idUsuario, idFamilia);  
         }
-        public List<Perfil> ObtenerArbolUsuario(int usuarioId)  // Devuelve todos los perfiles raíz (permisos asignados al usuario) con sus árboles completos.
+        public List<Perfil> ObtenerArbolUsuario(int usuarioId)  
         {
             var raices = PerfilDAL.ObtenerRaicesDeUsuario(usuarioId);
             var list = new List<Perfil>();
@@ -104,13 +104,14 @@ namespace BLL
             return list;
         }
 
-        public Perfil ConstruirArbol(int perfilId)  // Construye el árbol completo de un rol/familia a partir de un ID, evitando ciclos.
+        public Perfil ConstruirArbol(int perfilId)  
         {
             HashSet<int> componentesVisitados = new HashSet<int>();
             return ConstruirArbolInterno(perfilId, componentesVisitados);
         }
 
-        private Perfil ConstruirArbolInterno(int perfilId, HashSet<int> componentesVisitados)  // Versión recursiva. Obtiene un componente y carga todos sus hijos.
+        //  recursivo, obtiene un componente y carga todos sus hijos
+        private Perfil ConstruirArbolInterno(int perfilId, HashSet<int> componentesVisitados)  
         {
             if (componentesVisitados.Contains(perfilId))
                 return null;

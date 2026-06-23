@@ -5,22 +5,84 @@ using System;
 using System.Configuration;
 using System.Drawing;
 using System.Windows.Forms;
+using Seguridad;
+using BLL;
+using System.Collections.Generic;
 
 namespace SistemaTurnosUI
 {
-    public partial class Form1 : Form
+    public partial class Login : Form, IIdiomaObserver
     {
-        public Form1()
+        private ComboBox cmbIdiomas;
+        private Label lblSeleccioneIdioma;
+        private AuthService authService = new AuthService();
+        private IdiomaBL IdiomaBL = new IdiomaBL();
+        public Login()
         {
             InitializeComponent();
             this.Load += new System.EventHandler(this.Form1_Load);
+            IdiomaService.Suscribir(this);
         }
-        private AuthService authService = new AuthService();
+        
 
         private void Form1_Load(object sender, EventArgs e)
         {
             ConfigurarEstilo();
+            ConfigurarSelectorIdioma();
+            
         }
+
+        private void ConfigurarSelectorIdioma()
+        {
+
+            
+            lblSeleccioneIdioma = new Label();
+            lblSeleccioneIdioma.Text = "Seleccione su idioma / Select your language:";
+            lblSeleccioneIdioma.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            lblSeleccioneIdioma.ForeColor = Color.FromArgb(40, 50, 55);
+            lblSeleccioneIdioma.AutoSize = true;
+            lblSeleccioneIdioma.Location = new Point((this.ClientSize.Width - 300) / 2, 160);
+            this.Controls.Add(lblSeleccioneIdioma);
+
+            
+            cmbIdiomas = new ComboBox();
+            cmbIdiomas.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbIdiomas.Font = new Font("Segoe UI", 11);
+            cmbIdiomas.Size = new Size(200, 30);
+            cmbIdiomas.Location = new Point((this.ClientSize.Width - 200) / 2, 190);      
+
+            cmbIdiomas.DataSource = null;
+            cmbIdiomas.DataSource = IdiomaBL.Obtener();
+            cmbIdiomas.DisplayMember = "Nombre";
+            cmbIdiomas.ValueMember = "Id";
+            cmbIdiomas.SelectedIndex = -1;
+
+            cmbIdiomas.SelectedIndexChanged += CmbIdiomas_SelectedIndexChanged;
+            this.Controls.Add(cmbIdiomas);
+
+            panelLogin.Visible = false;
+
+            // Esta línea le ordena a Windows Forms: "Terminá de renderizar los controles nuevos, 
+            // y un milisegundo después, poné el combo en blanco sin disparar errores"
+            this.BeginInvoke((MethodInvoker)delegate {
+                cmbIdiomas.SelectedIndex = -1;
+            });
+        }
+        private void CmbIdiomas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+            if(cmbIdiomas.SelectedIndex != -1)
+            {
+                string idiomaSeleccionado = cmbIdiomas.SelectedItem.ToString();
+                
+                IdiomaService.CambiarIdioma(Convert.ToInt32(cmbIdiomas.SelectedValue));
+                
+                cmbIdiomas.Visible = false;
+                panelLogin.Visible = true;
+            }
+            
+        }
+
         //iniciar sesion
         private void button1_Click(object sender, EventArgs e)
         {
@@ -52,9 +114,6 @@ namespace SistemaTurnosUI
                     this.Hide();
                     MenuPrincipalForm menuForm = new MenuPrincipalForm();
                     menuForm.ShowDialog();
-                   // this.Hide();
-                    //MenuPrincipalForm menu = new MenuPrincipalForm();
-                    //menu.ShowDialog();
                     this.Close();
 
                     break;
@@ -77,6 +136,32 @@ namespace SistemaTurnosUI
                 default:
                     MessageBox.Show("Ocurrió un estado inesperado durante el inicio de sesión.", "Error Desconocido", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
+            }
+        }
+
+        public void UpdateIdioma(Dictionary<string, string> traducciones)
+        {
+            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
+            {
+                this.Text = traducciones[this.Tag.ToString()];
+            }
+
+            TraducirControlesRecursivo(this, traducciones);
+        }
+
+        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
+                {
+                    c.Text = traducciones[c.Tag.ToString()];
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControlesRecursivo(c, traducciones);
+                }
             }
         }
 
@@ -138,14 +223,7 @@ namespace SistemaTurnosUI
 
             this.AcceptButton = button1;
         }
-        // registrarme
-        private void button2_Click(object sender, EventArgs e)
-        {
-            
-            this.Hide();
-            RegistrarseForm menu = new RegistrarseForm();
-            menu.ShowDialog();
-            this.Close();
-        }
+
+       
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BLL.Servicios;
+using Seguridad;
 using SistemaTurnosUI;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,15 @@ using System.Windows.Forms;
 
 namespace SistemaTurnos
 {
-    public partial class MenuPrincipalForm : Form
+    public partial class MenuPrincipalForm : Form, IIdiomaObserver
     {
+
         private AuthService authService = new AuthService();
         public MenuPrincipalForm()
         {
             InitializeComponent();
+            IdiomaService.Suscribir(this);
+           // CargarPermisosUser();
         }
 
         private void cambiarClaveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -47,7 +51,7 @@ namespace SistemaTurnos
                 authService.Logout();
                 MessageBox.Show("Se desconecto exitosamente", "Desconectado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Hide();
-                Form1 menu = new Form1();
+                Login menu = new Login();
                 menu.ShowDialog();
                 this.Close();
             }
@@ -55,13 +59,6 @@ namespace SistemaTurnos
             {
                 MessageBox.Show(ex.Message, "Desconectarse", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void cambiarClaveToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            CambiarClaveForm cambiarClave = new CambiarClaveForm();
-            cambiarClave.MdiParent = this;
-            cambiarClave.Show();
         }
 
         private void bitacoraToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -93,10 +90,80 @@ namespace SistemaTurnos
 
         private void crearUsuariosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Hide();
             RegistrarseForm menu = new RegistrarseForm();
-            menu.ShowDialog();
-            this.Close();
+            menu.MdiParent = this;
+            menu.Show();
+        }
+
+        private void seleccionarIdiomaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IdiomaForm idiomaForm = new IdiomaForm();
+            idiomaForm.ShowDialog();
+        }
+
+        public void UpdateIdioma(Dictionary<string, string> traducciones)
+        {
+            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
+            {
+                this.Text = traducciones[this.Tag.ToString()];
+            }
+
+            TraducirControlesRecursivo(this, traducciones);
+
+            if (this.MainMenuStrip != null)
+            {
+                TraducirMenuStripRecursivo(this.MainMenuStrip.Items, traducciones);
+            }
+        }
+        private void TraducirMenuStripRecursivo(ToolStripItemCollection items, Dictionary<string, string> traducciones)
+        {
+            foreach (ToolStripItem item in items)
+            {
+                if (item.Tag != null && traducciones.ContainsKey(item.Tag.ToString()))
+                {
+                    item.Text = traducciones[item.Tag.ToString()];
+                }
+
+                if (item is ToolStripMenuItem menuPrincipal)
+                {
+                    if (menuPrincipal.HasDropDownItems)
+                    {
+                        TraducirMenuStripRecursivo(menuPrincipal.DropDownItems, traducciones);
+                    }
+                }
+            }
+        }
+        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
+                {
+                    c.Text = traducciones[c.Tag.ToString()];
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControlesRecursivo(c, traducciones);
+                }
+            }
+        }
+
+        private void cambiarClaveToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            CambiarClaveForm cambiarClave = new CambiarClaveForm();
+            cambiarClave.MdiParent = this;
+            cambiarClave.Show();
+        }
+
+        private void desbloqueoDeUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Pronto", "Pronto", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void restaurarMailAnteriorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Pronto", "Pronto", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

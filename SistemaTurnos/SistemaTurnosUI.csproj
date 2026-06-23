@@ -70,11 +70,17 @@
     <Compile Include="AdministrarPerfilesForm.Designer.cs">
       <DependentUpon>AdministrarPerfilesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="IdiomaForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="IdiomaForm.Designer.cs">
+      <DependentUpon>IdiomaForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Login.Designer.cs">
+      <DependentUpon>Login.cs</DependentUpon>
     </Compile>
     <Compile Include="MenuPrincipalForm.cs">
       <SubType>Form</SubType>
@@ -108,8 +114,11 @@
     <EmbeddedResource Include="AdministrarPerfilesForm.resx">
       <DependentUpon>AdministrarPerfilesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="IdiomaForm.resx">
+      <DependentUpon>IdiomaForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Login.resx">
+      <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GestionPerfilForm.resx">
       <DependentUpon>GestionPerfilForm.cs</DependentUpon>
@@ -147,6 +156,10 @@
     <ProjectReference Include="..\BLL\BLL.csproj">
       <Project>{7e2c87a7-0cf9-45d4-ba9b-8fc2677acc6c}</Project>
       <Name>BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Seguridad\Seguridad.csproj">
+      <Project>{ea149275-c64b-4a49-ba74-cebc1cd0ecd7}</Project>
+      <Name>Seguridad</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
