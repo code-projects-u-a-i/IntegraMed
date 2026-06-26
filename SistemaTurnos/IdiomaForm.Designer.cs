@@ -39,6 +39,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(159, 13);
             this.label1.TabIndex = 0;
+            this.label1.Tag = "IdiomaTexto";
             this.label1.Text = "¿En qué idioma querés trabajar?";
             // 
             // flpTarjetas
@@ -56,6 +57,7 @@
             this.Controls.Add(this.flpTarjetas);
             this.Controls.Add(this.label1);
             this.Name = "IdiomaForm";
+            this.Tag = "IdiomaForm";
             this.Text = "IdiomaForm";
             this.Load += new System.EventHandler(this.IdiomaForm_Load);
             this.ResumeLayout(false);

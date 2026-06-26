@@ -27,21 +27,22 @@ namespace DAL
             return MapPerfil(ds.Tables[0].Rows[0]);
         }
 
-        public static int CrearPerfil(string nombre,string tipo)  
+        public static int CrearPerfil(string nombre, string tag, string tipo)  
         {
-            if (string.IsNullOrWhiteSpace(nombre))
+            if (string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(tag))
                 return 0;
 
             DAO dao = new DAO();
 
             const string sqlInsert = @"
-            INSERT INTO Perfil (Perfil_Nombre,Perfil_Tipo)
-            VALUES (@N,@T);
+            INSERT INTO Perfil (Perfil_Nombre, Perfil_Tag ,Perfil_Tipo)
+            VALUES (@N,@TAG,@T);
 
             SELECT SCOPE_IDENTITY() AS Id;";
 
             var ds = dao.ExecuteDataSet(sqlInsert,
                 new SqlParameter("@N", nombre),
+                new SqlParameter("@TAG", tag),
                 new SqlParameter("@T", tipo)
             );
 
@@ -162,7 +163,7 @@ IF NOT EXISTS (SELECT 1 FROM Usuario_Perfil WHERE Usuario_ID=@U AND Perfil_ID=@P
                 new SqlParameter("@H", idHijo)
             );
         }
-
+        // no se esta haciendo por nombre, podria borrarse
         public static int ObtenerIdFamiliaPorNombre(string nombre)  //Busca el ID de una familia por su nombre.
         {
             if (string.IsNullOrWhiteSpace(nombre))
@@ -205,38 +206,6 @@ IF NOT EXISTS (SELECT 1 FROM Usuario_Perfil WHERE Usuario_ID=@U AND Perfil_ID=@P
             return list;
         }
 
-
-        public void QuitarFamiliaAUsuarios(int familiaId)  //Elimina la familia de todos los usuarios que la tengan asignada.
-        {
-            var dao = new DAO();
-            string sql = @"
-            DELETE FROM Usuario_Perfil
-            WHERE Perfil_ID = @familiaId;";
-
-            dao.ExecuteNonQueryFuntion(sql, new SqlParameter("@familiaId", familiaId));
-        }
-
-        public void EliminarTodosLosHijos(int idFamilia)  //Borra todos los hijos asociados a la familia.
-        {
-            var dao = new DAO();
-
-            string sql = @"
-            DELETE FROM Familia_Hijo
-            WHERE Familia_ID = @ID;";
-
-            dao.ExecuteNonQueryFuntion(sql, new SqlParameter("@ID", idFamilia));
-        }
-
-        public void Eliminar(int idFamilia)  //Borra la familia en sí (sin tocar asociaciones previamente).
-        {
-            var dao = new DAO();
-
-            string sql = @"
-            DELETE FROM Perfil
-            WHERE Perfil_ID = @ID AND Tipo = 'Familia';";
-
-            dao.ExecuteNonQueryFuntion(sql, new SqlParameter("@ID", idFamilia));
-        }
         public static List<Perfil> ObtenerFamiliasRaiz()
         {
             DAO dao = new DAO();
@@ -262,6 +231,7 @@ IF NOT EXISTS (SELECT 1 FROM Usuario_Perfil WHERE Usuario_ID=@U AND Perfil_ID=@P
         {
             int id = Convert.ToInt32(row["Perfil_ID"]);
             string nombre = row["Perfil_Nombre"].ToString();
+            string tag = row["Perfil_Tag"].ToString();
             string tipo = row["Perfil_Tipo"].ToString().Trim();
 
             Perfil perfil;
@@ -275,6 +245,7 @@ IF NOT EXISTS (SELECT 1 FROM Usuario_Perfil WHERE Usuario_ID=@U AND Perfil_ID=@P
 
             perfil.Id = id;
             perfil.Nombre = nombre;
+            perfil.Tag = tag;
 
             return perfil;
         }
@@ -310,7 +281,7 @@ IF NOT EXISTS (SELECT 1 FROM Usuario_Perfil WHERE Usuario_ID=@U AND Perfil_ID=@P
         public static void EditarPerfil(int id, string nombre)
         {
             var dao = new DAO();
-
+            // a tag no lo toco
             string sql = @"UPDATE Perfil 
                    SET Perfil_Nombre = @N 
                    WHERE Perfil_ID = @Id;";
@@ -333,7 +304,7 @@ IF NOT EXISTS (SELECT 1 FROM Usuario_Perfil WHERE Usuario_ID=@U AND Perfil_ID=@P
             FROM Familia_Hijo fh
             JOIN PermisosDelUsuario pu ON fh.Familia_ID = pu.Perfil_ID
         )
-        SELECT DISTINCT p.Perfil_ID, p.Perfil_Nombre, p.Perfil_Tipo
+        SELECT DISTINCT p.Perfil_ID, p.Perfil_Nombre, p.Perfil_Tag, p.Perfil_Tipo
         FROM Perfil p
         WHERE p.Perfil_ID NOT IN (SELECT Perfil_ID FROM PermisosDelUsuario);";
             // al final la consulta lista los perfiles que no existan en la tabla virtual permisosDelUsuario
@@ -344,13 +315,11 @@ IF NOT EXISTS (SELECT 1 FROM Usuario_Perfil WHERE Usuario_ID=@U AND Perfil_ID=@P
 
             foreach (DataRow r in ds.Tables[0].Rows)
             {
-                // Tu mapeador polimórfico genera instancias limpias de Familia o Patente
                 listaFiltrada.Add(MapPerfil(r));
             }
 
             return listaFiltrada;
         }
 
-       
     }
 }

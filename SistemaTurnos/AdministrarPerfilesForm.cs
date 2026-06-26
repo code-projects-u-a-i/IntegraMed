@@ -1,5 +1,7 @@
 ﻿using BE;
 using BLL;
+using BLL.Servicios;
+using Seguridad;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,47 +11,35 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SistemaTurnos
 {
-    public partial class AdministrarPerfilesForm : Form
+    /// <summary>
+    /// el form hace la administracion de los perfiles, crea, edita y elimina (PREGUNTAR)
+    /// </summary>
+    public partial class AdministrarPerfilesForm : Form, IIdiomaObserver
     {
         AdministrarPermisosService admPermisosService = new AdministrarPermisosService();
         public AdministrarPerfilesForm()
         {
             InitializeComponent();
             CargarTodoElSistemaEnTreeView();
+            CargarCombo();
             CargarEstilos();
+
+            IdiomaService.Suscribir(this);
+            if (IdiomaService.TraduccionesActuales != null)
+            {
+                this.UpdateIdioma(IdiomaService.TraduccionesActuales);
+            }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        #region Carga de Datos e Inicialización
+        private void CargarCombo()
         {
-            // condicion: NO SE PUEDE ELIMINAR UN PERFIL QUE ESTA SIENDO UTILIZADO POR UN USUARIO, ni tampoco que sea hijo de un perfil ni que sea padre de otros
-            // solo se puede borrar perfiles que no estan asignados a otro perfil y que no esten asignados a un usuario para preservar la integridad referencial en bd
-            if (treeViewPerfilesPosibles.SelectedNode == null)
-            {
-                MessageBox.Show("Por favor, para eliminar seleccione un perfil de la lista perfiles posibles a elegir. ", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            Perfil perfilAEliminar = (Perfil)treeViewPerfilesPosibles.SelectedNode.Tag;
-
-
-            DialogResult result = MessageBox.Show($"¿Está seguro de que desea eliminar definitivamente el perfil '{perfilAEliminar.Nombre}'?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.No) return;
-
-            try
-            {
-                admPermisosService.EliminarPerfil(perfilAEliminar.Id);
-
-                MessageBox.Show("Perfil eliminado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                CargarTodoElSistemaEnTreeView();
-                LimpiarIngresos();
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            comboBox1.DataSource = null;
+            //obtengo los permisos reales que vincula la bd con los permisos de la app
+            comboBox1.DataSource = admPermisosService.ObtenerTagsPermisos();
+            comboBox1.SelectedIndex = -1;
         }
+
         private void CargarTodoElSistemaEnTreeView()
         {
             treeViewPerfilesPosibles.Nodes.Clear();
@@ -98,31 +88,41 @@ namespace SistemaTurnos
                 }
             }
         }
+        #endregion
 
 
-        private void btnGuardarPerfil_Click(object sender, EventArgs e)
+        #region Eventos de Controles (Actions)
+        //eliminar
+        private void button1_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtNombre.Text) || (rbFamilia.Checked == false && rbPerfilSimple.Checked == false))
+            // condicion: NO SE PUEDE ELIMINAR UN PERFIL QUE ESTA SIENDO UTILIZADO POR UN USUARIO, ni tampoco que sea hijo de un perfil ni que sea padre de otros
+            // solo se puede borrar perfiles que no estan asignados a otro perfil y que no esten asignados a un usuario para preservar la integridad referencial en bd
+            if (treeViewPerfilesPosibles.SelectedNode == null)
             {
-                MessageBox.Show("Debe ingresar Nombre y tipo paracontinuar", "Faltan datos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, para eliminar seleccione un perfil de la lista perfiles posibles a elegir. ", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            string tipo = rbFamilia.Checked ? "Familia" : "Patente";
+            Perfil perfilAEliminar = (Perfil)treeViewPerfilesPosibles.SelectedNode.Tag;
 
-            admPermisosService.CrearPerfil(txtNombre.Text, tipo);
 
-            CargarTodoElSistemaEnTreeView();
+            DialogResult result = MessageBox.Show($"¿Está seguro de que desea eliminar definitivamente el perfil '{perfilAEliminar.Nombre}'?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.No) return;
 
-            LimpiarIngresos();
-        }
+            try
+            {
+                admPermisosService.EliminarPerfil(perfilAEliminar.Id);
 
-        private void LimpiarIngresos()
-        {
-            textBox1.Clear();
-            txtNombre.Clear();
-            rbFamilia.Checked = false;
-            rbPerfilSimple.Checked = false; 
+                MessageBox.Show("Perfil eliminado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                CargarTodoElSistemaEnTreeView();
+                LimpiarIngresos();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnLimpiar_Click(object sender, EventArgs e)
@@ -157,7 +157,7 @@ namespace SistemaTurnos
 
 
         }
-
+        // copia el nombre en el cuadro de texto para que pueda editarlo o eliminarlo
         private void treeViewPerfilesPosibles_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (e.Node == null) return;
@@ -172,6 +172,69 @@ namespace SistemaTurnos
             }
         }
 
+        
+        private void btnGuardarPerfil_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtNombre.Text) || (rbFamilia.Checked == false && rbPerfilSimple.Checked == false))
+            {
+                MessageBox.Show("Debe ingresar Nombre y tipo paracontinuar", "Faltan datos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (comboBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("Debe seleccionar el permiso a otorgar", "Faltan datos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            string tagSeleccionado = comboBox1.SelectedItem.ToString();
+            string tipo = rbFamilia.Checked ? "Familia" : "Patente";
+
+            admPermisosService.CrearPerfil(txtNombre.Text, tagSeleccionado, tipo);
+
+            CargarTodoElSistemaEnTreeView();
+
+            LimpiarIngresos();
+        }
+        #endregion
+
+
+        #region Implementación del Patrón Observer (IIdiomaObserver)
+        public void UpdateIdioma(Dictionary<string, string> traducciones)
+        {
+            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
+            {
+                this.Text = traducciones[this.Tag.ToString()];
+            }
+
+            TraducirControlesRecursivo(this, traducciones);
+        }
+
+        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
+                {
+                    c.Text = traducciones[c.Tag.ToString()];
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControlesRecursivo(c, traducciones);
+                }
+            }
+        }
+        #endregion
+        private void LimpiarIngresos()
+        {
+            textBox1.Clear();
+            txtNombre.Clear();
+            rbFamilia.Checked = false;
+            rbPerfilSimple.Checked = false;
+            comboBox1.SelectedIndex = -1;
+        }
+
+
+        #region Estilos de Interfaz (UI)
         private void CargarEstilos()
         {
             // ---- CONFIGURACIÓN DE COLORES BASE ----
@@ -259,5 +322,6 @@ namespace SistemaTurnos
                 }
             }
         }
+        #endregion
     }
 }

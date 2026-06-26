@@ -46,7 +46,7 @@ namespace DAL
 
             return 0; 
         }
-
+        // ver si puede borrarse
         public static Usuario ObtenerPorId(int id)
         {
             var dao = new DAO();
@@ -96,7 +96,7 @@ namespace DAL
 
             dao.ExecuteNonQueryFuntion(sqlUpdate);
         }
-
+        // no se usa, pero no se descarta usarlo eventualmente
         public static int Eliminar(Usuario usuario)  // Elimina el usuario.
         {
             var dao = new DAO();

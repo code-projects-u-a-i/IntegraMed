@@ -10,11 +10,10 @@ namespace BLL.Servicios
 {
     public class IdiomaService
     {
-        // Lista de todos los formularios abiertos que están escuchando
+
         private static List<IIdiomaObserver> _observadores = new List<IIdiomaObserver>();
 
         // El diccionario en memoria con las traducciones del idioma actual
-        // Ejemplo: ["lbl_Usuario" => "Username", "btn_Agregar" => "Add"]
         public static Dictionary<string, string> TraduccionesActuales { get; private set; }
 
         public static void Suscribir(IIdiomaObserver observador)
@@ -27,13 +26,13 @@ namespace BLL.Servicios
             _observadores.Remove(observador);
         }
 
-        // Cuando el usuario cambia el idioma en el combo principal, llamás a este método
+        // Cuando el usuario cambia el idioma en el combo principal se llama al metodo
         public static void CambiarIdioma(int idiomaId)
         {
-            // 1. Vas a la DAL y te traés el diccionario del idioma seleccionado
+           
             TraduccionesActuales = IdiomaDAL.ObtenerTraducciones(idiomaId);
 
-            // 2. NOTIFICAR (Avisar a todas las pantallas abiertas que se actualicen)
+          
             foreach (var obs in _observadores)
             {
                 obs.UpdateIdioma(TraduccionesActuales);

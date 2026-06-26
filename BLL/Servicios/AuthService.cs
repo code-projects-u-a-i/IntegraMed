@@ -21,9 +21,10 @@ namespace BLL.Servicios
         private readonly UsuarioBL _usuarioBL = new UsuarioBL();
         private readonly BitacoraBL _bitacoraBL = new BitacoraBL();
         private readonly CryptoManager _crypto = new CryptoManager();
+        private readonly AdministrarPermisosService _admPermisosService = new AdministrarPermisosService();
 
         public AuthService() { }
-        public LoginResult Login(string username, string passwordIngresada)
+        public LoginResult Login(string username, string passwordIngresada, int idIdioma)
         {
             if (SessionManager.getInstance().HaySessionIniciada())
             {
@@ -48,7 +49,11 @@ namespace BLL.Servicios
             
             if (coincidePassw(passwordIngresada, _crypto, usuario.Password))
             {
+                usuario = _usuarioBL.ObtenerPermisos(usuario);
                 SessionManager.getInstance().CrearSession(usuario);
+                //ahora se le setea tambien el idioma //PREGUNTAR
+                SessionManager.getInstance().IdiomaActual = idIdioma;
+
                 _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Ingreso Exitoso", "Se blanquea intentos fallidos", string.Empty, SeveridadLog.Info);
 
                 if (usuario.IntentosFallidos != 0)

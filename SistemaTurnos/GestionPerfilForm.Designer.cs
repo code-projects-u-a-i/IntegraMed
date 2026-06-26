@@ -54,6 +54,7 @@
             this.groupBoxArbol.Size = new System.Drawing.Size(414, 442);
             this.groupBoxArbol.TabIndex = 3;
             this.groupBoxArbol.TabStop = false;
+            this.groupBoxArbol.Tag = "PerfilesFamiliaPanel";
             this.groupBoxArbol.Text = "Seleccione la Familia de perfiles para editar";
             // 
             // btnQuitarHijo
@@ -62,6 +63,7 @@
             this.btnQuitarHijo.Name = "btnQuitarHijo";
             this.btnQuitarHijo.Size = new System.Drawing.Size(179, 66);
             this.btnQuitarHijo.TabIndex = 5;
+            this.btnQuitarHijo.Tag = "PerfilesQuitar";
             this.btnQuitarHijo.Text = ">> Quitar del Perfil Seleccionado";
             this.btnQuitarHijo.UseVisualStyleBackColor = true;
             this.btnQuitarHijo.Click += new System.EventHandler(this.btnQuitarHijo_Click);
@@ -72,6 +74,7 @@
             this.btnAgregarHijo.Name = "btnAgregarHijo";
             this.btnAgregarHijo.Size = new System.Drawing.Size(179, 66);
             this.btnAgregarHijo.TabIndex = 5;
+            this.btnAgregarHijo.Tag = "PerfilesAgregar";
             this.btnAgregarHijo.Text = "<< Agregar al Perfil Seleccionado";
             this.btnAgregarHijo.UseVisualStyleBackColor = true;
             this.btnAgregarHijo.Click += new System.EventHandler(this.btnAgregarHijo_Click);
@@ -91,6 +94,7 @@
             this.groupBoxArbolEdicion.Size = new System.Drawing.Size(456, 442);
             this.groupBoxArbolEdicion.TabIndex = 6;
             this.groupBoxArbolEdicion.TabStop = false;
+            this.groupBoxArbolEdicion.Tag = "PerfilesPosibles";
             this.groupBoxArbolEdicion.Text = "Perfiles posibles de elegir";
             // 
             // GestionPerfilForm

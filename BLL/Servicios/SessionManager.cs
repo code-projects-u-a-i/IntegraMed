@@ -13,6 +13,8 @@ namespace BLL.Servicios
         private static SessionManager _instancia;
         private Usuario _usuario;
         private DateTime _fechaInicio;
+        ///preguntar si esto esta bien
+        private int _idiomaActual;
 
         private SessionManager() { }
 
@@ -60,6 +62,20 @@ namespace BLL.Servicios
 
             }
         }
+
+        public int IdiomaActual
+        {
+
+            get { return _idiomaActual; }
+            set
+            {
+                _idiomaActual = value;
+ 
+                // este metodo dispara el aviso automáticamente a los formularios suscriptos
+                IdiomaCambiado?.Invoke(_idiomaActual);
+            }
+        }
+
         public bool HaySessionIniciada()
         {
             return _usuario != null;
@@ -69,6 +85,10 @@ namespace BLL.Servicios
         {
             return _usuario;
         }
+        /// <summary>
+        ///  PREGUNTAR!! si esta bien
+        /// </summary>
+        public event Action<int> IdiomaCambiado;
 
     }
 }

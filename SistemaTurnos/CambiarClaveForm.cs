@@ -1,4 +1,6 @@
 ﻿using BLL;
+using BLL.Servicios;
+using Seguridad;
 using SistemaTurnosUI;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,11 @@ using System.Windows.Forms;
 
 namespace SistemaTurnos
 {
-    public partial class CambiarClaveForm : Form
+
+    /// <summary>
+    /// este form cambia la clave
+    /// </summary>
+    public partial class CambiarClaveForm : Form, IIdiomaObserver
     {
         private UsuarioBL usuarioBL = new UsuarioBL();
 
@@ -25,23 +31,86 @@ namespace SistemaTurnos
         public CambiarClaveForm()
         {
             InitializeComponent();
+            // suscripcion y obtener las traducciones segun el idioma
+            IdiomaService.Suscribir(this);
+            if (IdiomaService.TraduccionesActuales != null)
+            {
+                this.UpdateIdioma(IdiomaService.TraduccionesActuales);
+            }
         }
 
+        #region Eventos del Formulario
         private void CambiarClaveForm_Load(object sender, EventArgs e)
         {
             this.BackColor = _fondoOscuro;
             EnsamblarPanelFondo();
         }
 
+        private void btnAceptar_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtVieja.Text) || string.IsNullOrWhiteSpace(txtNueva.Text))
+            {
+                MessageBox.Show("Por favor, complete todos los campos antes de continuar.", "Campos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                usuarioBL.ActualizarContraseña(txtVieja.Text, txtNueva.Text);
+                MessageBox.Show("Se modificó la contraseña exitosamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Cambio de clave con error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            this.Close();
+        }
+
+        #endregion
+
+        #region Implementación del Patrón Observer (IIdiomaObserver)
+        public void UpdateIdioma(Dictionary<string, string> traducciones)
+        {
+            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
+            {
+                this.Text = traducciones[this.Tag.ToString()];
+            }
+
+            TraducirControlesRecursivo(this, traducciones);
+        }
+
+        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
+                {
+                    c.Text = traducciones[c.Tag.ToString()];
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControlesRecursivo(c, traducciones);
+                }
+            }
+        }
+        #endregion
+
+        #region Inicialización y Estilos de Interfaz (UI)
         private void EnsamblarPanelFondo()
         {
             pnlFondo.Name = "panelDarkClave";
 
             titulolbl.ForeColor = _acentoTurquesa;
             titulolbl.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-           // titulolbl.AutoSize = false;
-          //  titulolbl.Height = 30;
-            
+             
 
             contActualLbl.ForeColor = _acentoTurquesa;
             contActualLbl.Font = new Font("Segoe UI", 9, FontStyle.Bold);
@@ -83,41 +152,7 @@ namespace SistemaTurnos
             btnCancelar.MouseEnter += (s, e) => btnCancelar.Font = new Font("Segoe UI", 9, FontStyle.Underline);
             btnCancelar.MouseLeave += (s, e) => btnCancelar.Font = new Font("Segoe UI", 9, FontStyle.Regular);
 
-
-            
-
         }
-
-        private void btnAceptar_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtVieja.Text) || string.IsNullOrWhiteSpace(txtNueva.Text))
-            {
-                MessageBox.Show("Por favor, complete todos los campos antes de continuar.", "Campos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            try
-            {
-                usuarioBL.ActualizarContraseña(txtVieja.Text, txtNueva.Text);
-                MessageBox.Show("Se modificó la contraseña exitosamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Cambio de clave con error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void btnCancelar_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            this.Close();
-        }
-
-        private void pnlFondo_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
+        #endregion
     }
 }

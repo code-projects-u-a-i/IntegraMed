@@ -14,7 +14,7 @@ namespace DAL
         public static Dictionary<string, string> ObtenerTraducciones(int idiomaId)
         {
             DAO dao = new DAO();
-            // La clave es un string, la consulta no requiere JOINs
+            // La clave es un string
             string sql = @"SELECT Traduccion_EtiquetaClave, Traduccion_Texto 
                            FROM Traduccion 
                            WHERE Traduccion_IdiomaId = @Id";
@@ -54,7 +54,7 @@ namespace DAL
             return lista;
         }
 
-       
+       // proximamente se va a implementar estos dos metodos
         public static int InsertarIdioma(string nombre)
         {
             DAO dao = new DAO();

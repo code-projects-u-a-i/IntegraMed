@@ -78,5 +78,16 @@ namespace BLL
         {
             return UsuarioDAL.Listar();
         }
+        // este metodo busca los permisos de un usuario (lista) para despues agregarlo en la lista de permisos del usuario
+        public Usuario ObtenerPermisos(Usuario usuario)
+        {
+            AdministrarPermisosService admPermServices = new AdministrarPermisosService();
+
+            foreach (var item in admPermServices.ObtenerArbolUsuario(usuario.Id))
+            {
+                usuario.AgregarPermiso(item);
+            }
+           return usuario;
+        }
     }
 }

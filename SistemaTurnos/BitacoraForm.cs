@@ -1,5 +1,7 @@
 ﻿using BE;
 using BLL;
+using BLL.Servicios;
+using Seguridad;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,8 +13,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SistemaTurnos
-{
-    public partial class BitacoraForm : Form
+{/// <summary>
+/// este form muestra la bitacora y tiene filtros de severidad, tal vez se podrian agregar mas filtros
+/// </summary>
+    public partial class BitacoraForm : Form, IIdiomaObserver
     {
 
         private BitacoraBL bitacoraBL = new BitacoraBL();
@@ -27,8 +31,13 @@ namespace SistemaTurnos
             cmbFiltro = FiltroSeveridad();
             CargarDatos();
             ConfigurarGrid();
+            IdiomaService.Suscribir(this);
+            if (IdiomaService.TraduccionesActuales != null)
+            {
+                this.UpdateIdioma(IdiomaService.TraduccionesActuales);
+            }
         }
-
+        #region Carga y Filtrado de Datos
         public void CargarDatos()
         {
             try
@@ -61,7 +70,37 @@ namespace SistemaTurnos
             
             return cmbFiltro;
         }
+        #endregion
 
+        #region Implementación del Patrón Observer (IIdiomaObserver)
+        public void UpdateIdioma(Dictionary<string, string> traducciones)
+        {
+            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
+            {
+                this.Text = traducciones[this.Tag.ToString()];
+            }
+
+            TraducirControlesRecursivo(this, traducciones);
+        }
+
+        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
+                {
+                    c.Text = traducciones[c.Tag.ToString()];
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControlesRecursivo(c, traducciones);
+                }
+            }
+        }
+        #endregion
+
+        #region Configuración y Formato del DataGridView (UI)
         public void ConfigurarGrid()
         {
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -114,5 +153,6 @@ namespace SistemaTurnos
             dgv.Columns["Accion"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dgv.Columns["Mensaje"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         }
+        #endregion
     }
 }

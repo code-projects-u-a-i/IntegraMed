@@ -8,14 +8,14 @@ namespace BE
 {
     public class Familia : Perfil
     {
-        public override bool Contiene(string patenteNombre)
+        public override bool Contiene(string patenteTag)
         {
-            if (base.Contiene(patenteNombre)) return true; // familia tiene el mismo nombre?
+            if (base.Contiene(patenteTag)) return true; 
 
             
             foreach (var hijo in listaPerfiles)
             {
-                if (hijo.Contiene(patenteNombre)) return true; // hijos de familia tiene el mismo nombre
+                if (hijo.Contiene(patenteTag)) return true; 
             }
 
             return false;

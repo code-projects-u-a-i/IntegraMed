@@ -1,5 +1,7 @@
 ﻿using BE;
 using BLL;
+using BLL.Servicios;
+using Seguridad;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +14,10 @@ using System.Windows.Forms;
 
 namespace SistemaTurnos
 {
-    public partial class GestionPerfilForm : Form
+    /// <summary>
+    /// este form permite asignar patentes a familias
+    /// </summary>
+    public partial class GestionPerfilForm : Form, IIdiomaObserver
     {
         private AdministrarPermisosService admPermisosService = new AdministrarPermisosService();
         public GestionPerfilForm()
@@ -21,8 +26,14 @@ namespace SistemaTurnos
             SetearEstilos();
             ActualizarTreeView();
             ActualizarTreeViewFamilias();
+            IdiomaService.Suscribir(this);
+            if (IdiomaService.TraduccionesActuales != null)
+            {
+                this.UpdateIdioma(IdiomaService.TraduccionesActuales);
+            }
         }
 
+        #region Carga de Datos e Inicialización de Árboles
         private void ActualizarTreeViewFamilias()
         {
             treeViewFamilias.Nodes.Clear();
@@ -101,20 +112,6 @@ namespace SistemaTurnos
             }
         }
 
-
-        private void treeViewFamilias_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            if (treeViewFamilias.SelectedNode != null)
-            {
-                Perfil perfilSeleccionado = (Perfil)treeViewFamilias.SelectedNode.Tag;
-
-                if (perfilSeleccionado is Familia familiaSeleccionada)
-                {
-                    ActualizarTreeViewDisponibles(familiaSeleccionada);
-                }
-            }
-        }
-
         private void ActualizarTreeViewDisponibles(Familia familiaSeleccionadaPadre)
         {
             treeViewPerfilesPosibles.Nodes.Clear();
@@ -148,98 +145,22 @@ namespace SistemaTurnos
             }
         }
 
+        #endregion
 
-
-
-        private void SetearEstilos()
+        #region Eventos de Controles 
+        private void treeViewFamilias_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            // ==========================================
-            // 1. PALETA DE COLORES (Definición)
-            // ==========================================
-            Color fondoOscuroPrincipal = Color.FromArgb(38, 50, 56);   // #263238
-            Color fondoControles = Color.FromArgb(55, 71, 79);         // #37474F
-            Color turquesaPrincipal = Color.FromArgb(78, 205, 171);    // #4ECDAB
-            Color textoClaro = Color.FromArgb(236, 240, 241);          // #ECF0F1
-            Color textoGrisBotonSecundario = Color.FromArgb(127, 140, 141); // #7F8C8D
-
-            // Fuentes
-            Font fuenteLabels = new Font("Segoe UI", 9.75F, FontStyle.Regular);
-            Font fuenteBotones = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-
-            // ==========================================
-            // 2. FORMULARIO PRINCIPAL
-            // ==========================================
-            this.BackColor = fondoOscuroPrincipal;
-            this.ForeColor = textoClaro;
-
-            // ==========================================
-            // 3. GROUPBOXES (Contenedores)
-            // ==========================================
-            // Nota: Cambiá los nombres por los que tengan tus GroupBoxes reales
-            var groupBoxes = new GroupBox[] { groupBoxArbol, groupBoxArbolEdicion };
-            foreach (var gb in groupBoxes)
+            if (treeViewFamilias.SelectedNode != null)
             {
-                if (gb != null)
+                Perfil perfilSeleccionado = (Perfil)treeViewFamilias.SelectedNode.Tag;
+
+                if (perfilSeleccionado is Familia familiaSeleccionada)
                 {
-                    gb.ForeColor = turquesaPrincipal; // Tiñe el título del GroupBox en turquesa
-                    gb.Font = fuenteLabels;
-                }
-            }
-
-            // ==========================================
-            // 4. COMPONENTES DE ENTRADA Y VISTAS (Inputs, Listas, Árbol)
-            // ==========================================
-            // Árbol (TreeView)
-            if (treeViewFamilias != null)
-            {
-                treeViewFamilias.BackColor = fondoControles;
-                treeViewFamilias.ForeColor = textoClaro;
-                treeViewFamilias.LineColor = turquesaPrincipal; // Color de las líneas del árbol
-                treeViewFamilias.BorderStyle = BorderStyle.FixedSingle;
-            }
-
-            // Lista (ListBox)
-            if (treeViewPerfilesPosibles != null)
-            {
-                treeViewPerfilesPosibles.BackColor = fondoControles;
-                treeViewPerfilesPosibles.ForeColor = textoClaro;
-                treeViewPerfilesPosibles.LineColor = turquesaPrincipal; // Color de las líneas del árbol
-                treeViewPerfilesPosibles.BorderStyle = BorderStyle.FixedSingle;
-            }
-
-            // ==========================================
-            // 5. BOTONES PRINCIPALES (Estilo "Actualizar Contraseña")
-            // ==========================================
-            var botonesPrincipales = new Button[] { btnAgregarHijo };
-            foreach (var btn in botonesPrincipales)
-            {
-                if (btn != null)
-                {
-                    btn.FlatStyle = FlatStyle.Flat;
-                    btn.FlatAppearance.BorderSize = 0;
-                    btn.BackColor = turquesaPrincipal;
-                    btn.ForeColor = fondoOscuroPrincipal; // Texto oscuro para que contraste con el turquesa
-                    btn.Font = fuenteBotones;
-                }
-            }
-
-            // ==========================================
-            // 6. BOTONES SECUNDARIOS (Estilo "Cancelar")
-            // ==========================================
-            var botonesSecundarios = new Button[] { btnQuitarHijo };
-            foreach (var btn in botonesSecundarios)
-            {
-                if (btn != null)
-                {
-                    btn.FlatStyle = FlatStyle.Flat;
-                    btn.FlatAppearance.BorderSize = 1;
-                    btn.FlatAppearance.BorderColor = textoClaro; // Borde fino claro
-                    btn.BackColor = fondoOscuroPrincipal;        // Fondo igual al del formulario
-                    btn.ForeColor = textoGrisBotonSecundario;    // Texto gris apagado
-                    btn.Font = fuenteBotones;
+                    ActualizarTreeViewDisponibles(familiaSeleccionada);
                 }
             }
         }
+
 
         private void btnAgregarHijo_Click(object sender, EventArgs e)
         {
@@ -331,12 +252,132 @@ namespace SistemaTurnos
                     treeViewPerfilesPosibles.Nodes.Clear();
                 }
 
-               
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al desvincular componentes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        #endregion
+
+        #region Implementación del Patrón Observer (IIdiomaObserver)
+        public void UpdateIdioma(Dictionary<string, string> traducciones)
+        {
+            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
+            {
+                this.Text = traducciones[this.Tag.ToString()];
+            }
+
+            TraducirControlesRecursivo(this, traducciones);
+        }
+
+        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
+                {
+                    c.Text = traducciones[c.Tag.ToString()];
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControlesRecursivo(c, traducciones);
+                }
+            }
+        }
+        #endregion
+
+        private void SetearEstilos()
+        {
+            // ==========================================
+            // 1. PALETA DE COLORES (Definición)
+            // ==========================================
+            Color fondoOscuroPrincipal = Color.FromArgb(38, 50, 56);   // #263238
+            Color fondoControles = Color.FromArgb(55, 71, 79);         // #37474F
+            Color turquesaPrincipal = Color.FromArgb(78, 205, 171);    // #4ECDAB
+            Color textoClaro = Color.FromArgb(236, 240, 241);          // #ECF0F1
+            Color textoGrisBotonSecundario = Color.FromArgb(127, 140, 141); // #7F8C8D
+
+            // Fuentes
+            Font fuenteLabels = new Font("Segoe UI", 9.75F, FontStyle.Regular);
+            Font fuenteBotones = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+
+            // ==========================================
+            // 2. FORMULARIO PRINCIPAL
+            // ==========================================
+            this.BackColor = fondoOscuroPrincipal;
+            this.ForeColor = textoClaro;
+
+            // ==========================================
+            // 3. GROUPBOXES (Contenedores)
+            // ==========================================
+            // Nota: Cambiá los nombres por los que tengan tus GroupBoxes reales
+            var groupBoxes = new GroupBox[] { groupBoxArbol, groupBoxArbolEdicion };
+            foreach (var gb in groupBoxes)
+            {
+                if (gb != null)
+                {
+                    gb.ForeColor = turquesaPrincipal; // Tiñe el título del GroupBox en turquesa
+                    gb.Font = fuenteLabels;
+                }
+            }
+
+            // ==========================================
+            // 4. COMPONENTES DE ENTRADA Y VISTAS (Inputs, Listas, Árbol)
+            // ==========================================
+            // Árbol (TreeView)
+            if (treeViewFamilias != null)
+            {
+                treeViewFamilias.BackColor = fondoControles;
+                treeViewFamilias.ForeColor = textoClaro;
+                treeViewFamilias.LineColor = turquesaPrincipal; // Color de las líneas del árbol
+                treeViewFamilias.BorderStyle = BorderStyle.FixedSingle;
+            }
+
+            // Lista (ListBox)
+            if (treeViewPerfilesPosibles != null)
+            {
+                treeViewPerfilesPosibles.BackColor = fondoControles;
+                treeViewPerfilesPosibles.ForeColor = textoClaro;
+                treeViewPerfilesPosibles.LineColor = turquesaPrincipal; // Color de las líneas del árbol
+                treeViewPerfilesPosibles.BorderStyle = BorderStyle.FixedSingle;
+            }
+
+            // ==========================================
+            // 5. BOTONES PRINCIPALES (Estilo "Actualizar Contraseña")
+            // ==========================================
+            var botonesPrincipales = new Button[] { btnAgregarHijo };
+            foreach (var btn in botonesPrincipales)
+            {
+                if (btn != null)
+                {
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 0;
+                    btn.BackColor = turquesaPrincipal;
+                    btn.ForeColor = fondoOscuroPrincipal; // Texto oscuro para que contraste con el turquesa
+                    btn.Font = fuenteBotones;
+                }
+            }
+
+            // ==========================================
+            // 6. BOTONES SECUNDARIOS (Estilo "Cancelar")
+            // ==========================================
+            var botonesSecundarios = new Button[] { btnQuitarHijo };
+            foreach (var btn in botonesSecundarios)
+            {
+                if (btn != null)
+                {
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 1;
+                    btn.FlatAppearance.BorderColor = textoClaro; // Borde fino claro
+                    btn.BackColor = fondoOscuroPrincipal;        // Fondo igual al del formulario
+                    btn.ForeColor = textoGrisBotonSecundario;    // Texto gris apagado
+                    btn.Font = fuenteBotones;
+                }
+            }
+        }
+
     }
 }

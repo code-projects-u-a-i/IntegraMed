@@ -60,6 +60,7 @@
             this.btnEliminarPerfil.Name = "btnEliminarPerfil";
             this.btnEliminarPerfil.Size = new System.Drawing.Size(260, 23);
             this.btnEliminarPerfil.TabIndex = 4;
+            this.btnEliminarPerfil.Tag = "AsigEliminarPerfil";
             this.btnEliminarPerfil.Text = "Eliminar Perfil";
             this.btnEliminarPerfil.UseVisualStyleBackColor = true;
             this.btnEliminarPerfil.Click += new System.EventHandler(this.btnEliminarPerfil_Click);
@@ -70,6 +71,7 @@
             this.btnAgregarPerfil.Name = "btnAgregarPerfil";
             this.btnAgregarPerfil.Size = new System.Drawing.Size(260, 23);
             this.btnAgregarPerfil.TabIndex = 3;
+            this.btnAgregarPerfil.Tag = "AsigAgregarPerfil";
             this.btnAgregarPerfil.Text = "Agregar Perfil";
             this.btnAgregarPerfil.UseVisualStyleBackColor = true;
             this.btnAgregarPerfil.Click += new System.EventHandler(this.btnAgregarPerfil_Click);
@@ -80,6 +82,7 @@
             this.btnBuscarPerfil.Name = "btnBuscarPerfil";
             this.btnBuscarPerfil.Size = new System.Drawing.Size(260, 23);
             this.btnBuscarPerfil.TabIndex = 2;
+            this.btnBuscarPerfil.Tag = "AsigBuscarPerfiles";
             this.btnBuscarPerfil.Text = "Buscar perfiles disponibles";
             this.btnBuscarPerfil.UseVisualStyleBackColor = true;
             this.btnBuscarPerfil.Click += new System.EventHandler(this.btnBuscarPerfil_Click);
@@ -91,6 +94,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(98, 13);
             this.label1.TabIndex = 0;
+            this.label1.Tag = "AsigNombreUsuario";
             this.label1.Text = "Nombre de Usuario";
             // 
             // cbUsuarios
@@ -108,6 +112,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(104, 13);
             this.label3.TabIndex = 0;
+            this.label3.Tag = "AsigPerfilesDisp";
             this.label3.Text = "Permisos disponibles";
             // 
             // cbPermisos
@@ -133,6 +138,7 @@
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.panel2);
             this.Name = "AsignarPerfilesUsuarioForm";
+            this.Tag = "AsignarPerfilesUsuarioForm";
             this.Text = "AsignarPerfilesUsuarioForm";
             this.Load += new System.EventHandler(this.AsignarPerfilesUsuarioForm_Load);
             this.panel2.ResumeLayout(false);

@@ -10,6 +10,8 @@ namespace BE
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
+        public string Tag { get; set; }
+
         // esto lo podria poner en familia, porque es el unico que va a iterar la lista, pero "composite dice que todos los objetos deben ser tratados por igual, independientemente de su tipo"
         protected List<Perfil> listaPerfiles = new List<Perfil>();
 
@@ -29,9 +31,9 @@ namespace BE
             return listaPerfiles;
         }
 
-        public virtual bool Contiene(string patenteNombre)
+        public virtual bool Contiene(string patenteTag)
         {
-            return this.Nombre.Equals(patenteNombre, StringComparison.OrdinalIgnoreCase);
+            return this.Tag.Equals(patenteTag, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

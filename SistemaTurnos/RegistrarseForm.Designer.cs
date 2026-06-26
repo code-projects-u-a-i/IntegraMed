@@ -47,6 +47,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(740, 31);
             this.button1.TabIndex = 6;
+            this.button1.Tag = "RegUsuBoton";
             this.button1.Text = "Registrar usuario";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -72,6 +73,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(61, 13);
             this.label2.TabIndex = 1;
+            this.label2.Tag = "RegUsuPass";
             this.label2.Text = "Contraseña";
             // 
             // label1
@@ -81,6 +83,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(81, 13);
             this.label1.TabIndex = 0;
+            this.label1.Tag = "RegUsuNombre";
             this.label1.Text = "Nombre usuario";
             // 
             // groupBox1
@@ -99,6 +102,7 @@
             this.groupBox1.Size = new System.Drawing.Size(787, 301);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
+            this.groupBox1.Tag = "RegUsuarioPanel";
             this.groupBox1.Text = "Ingresar Nuevo Usuario";
             // 
             // label4
@@ -108,6 +112,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(295, 13);
             this.label4.TabIndex = 10;
+            this.label4.Tag = "RegUsuFamilia";
             this.label4.Text = "Elegir una familia de permisos para asignarle al nuevo usuario";
             // 
             // treeView1
@@ -124,6 +129,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 8;
+            this.label3.Tag = "RegUsuMail";
             this.label3.Text = "Mail";
             // 
             // textBox3
@@ -140,6 +146,7 @@
             this.ClientSize = new System.Drawing.Size(1088, 466);
             this.Controls.Add(this.groupBox1);
             this.Name = "RegistrarseForm";
+            this.Tag = "RegistrarUsuarioForm";
             this.Text = "Registrar Usuario";
             this.Load += new System.EventHandler(this.RegistrarseForm_Load);
             this.groupBox1.ResumeLayout(false);

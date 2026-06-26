@@ -1,5 +1,7 @@
 ﻿using BE;
 using BLL;
+using BLL.Servicios;
+using Seguridad;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +14,10 @@ using System.Windows.Forms;
 
 namespace SistemaTurnos
 {
-    public partial class AsignarPerfilesUsuarioForm : Form
+    /// <summary>
+    /// el form asigna perfiles a usuarios
+    /// </summary>
+    public partial class AsignarPerfilesUsuarioForm : Form, IIdiomaObserver
     {
         AdministrarPermisosService admPermisosService = new AdministrarPermisosService();
         UsuarioBL usuarioBL = new UsuarioBL();
@@ -22,6 +27,12 @@ namespace SistemaTurnos
         public AsignarPerfilesUsuarioForm()
         {
             InitializeComponent();
+            IdiomaService.Suscribir(this);
+
+            if (IdiomaService.TraduccionesActuales != null)
+            {
+                this.UpdateIdioma(IdiomaService.TraduccionesActuales);
+            }
         }
 
         private void AsignarPerfilesUsuarioForm_Load(object sender, EventArgs e)
@@ -29,7 +40,7 @@ namespace SistemaTurnos
             ConfigurarEstilos();
             CargarUsuarios();
         }
-
+        #region Carga de Datos e Inicialización
         private void CargarUsuarios()
         {
              cbUsuarios.DataSource = null;
@@ -38,43 +49,6 @@ namespace SistemaTurnos
              cbUsuarios.ValueMember = "Id";
              cbUsuarios.SelectedIndex = -1;
         }
-
-        private void btnBuscarPerfil_Click(object sender, EventArgs e)
-        {
-            if (cbUsuarios.SelectedIndex == -1)
-            {
-                MessageBox.Show("Por favor, seleccione un usuario.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            usuarioId = Convert.ToInt32(cbUsuarios.SelectedValue);
-            cbPermisos.DataSource = null;
-            List<Perfil> todosLosPerfiles = admPermisosService.ObtenerTodosLosPerfiles(Convert.ToInt32(cbUsuarios.SelectedValue));
-            cbPermisos.DataSource = todosLosPerfiles;
-            cbPermisos.DisplayMember = "Nombre";
-            cbPermisos.ValueMember = "Id";
-            // Mostrar el treeview con los perfiles que tiene el usuario
-            ListarPerfilesEnTreeView();
-
-
-        }
-
-        private void btnAgregarPerfil_Click(object sender, EventArgs e)
-        {
-            if (cbPermisos.SelectedIndex == -1)
-            {
-                MessageBox.Show("Por favor, seleccione un perfil.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            //Asignar el perfil al usuario
-            admPermisosService.AsignarRolAUsuario(usuarioId, Convert.ToInt32(cbPermisos.SelectedValue));
-
-            // Mostrar el treeview con los perfiles que tiene el usuario
-            ListarPerfilesEnTreeView();
-            // limpio el usuario id
-            usuarioId = 0;
-        }
-
         private void ListarPerfilesEnTreeView()
         {
             treeView1.Nodes.Clear();
@@ -116,6 +90,46 @@ namespace SistemaTurnos
                 }
             }
         }
+
+        #endregion
+        #region Eventos de Controles
+        private void btnBuscarPerfil_Click(object sender, EventArgs e)
+        {
+            if (cbUsuarios.SelectedIndex == -1)
+            {
+                MessageBox.Show("Por favor, seleccione un usuario.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            usuarioId = Convert.ToInt32(cbUsuarios.SelectedValue);
+            cbPermisos.DataSource = null;
+            List<Perfil> todosLosPerfiles = admPermisosService.ObtenerTodosLosPerfiles(Convert.ToInt32(cbUsuarios.SelectedValue));
+            cbPermisos.DataSource = todosLosPerfiles;
+            cbPermisos.DisplayMember = "Nombre";
+            cbPermisos.ValueMember = "Id";
+            // Mostrar el treeview con los perfiles que tiene el usuario
+            ListarPerfilesEnTreeView();
+
+
+        }
+
+        private void btnAgregarPerfil_Click(object sender, EventArgs e)
+        {
+            if (cbPermisos.SelectedIndex == -1)
+            {
+                MessageBox.Show("Por favor, seleccione un perfil.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            //Asignar el perfil al usuario
+            admPermisosService.AsignarRolAUsuario(usuarioId, Convert.ToInt32(cbPermisos.SelectedValue));
+
+            // Mostrar el treeview con los perfiles que tiene el usuario
+            ListarPerfilesEnTreeView();
+            // limpio el usuario id
+            usuarioId = 0;
+        }
+
+        
 
         private void btnEliminarPerfil_Click(object sender, EventArgs e)
         {
@@ -159,6 +173,36 @@ namespace SistemaTurnos
             }
         }
 
+        #endregion
+
+        #region Implementación del Patrón Observer (IIdiomaObserver)
+        public void UpdateIdioma(Dictionary<string, string> traducciones)
+        {
+            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
+            {
+                this.Text = traducciones[this.Tag.ToString()];
+            }
+
+            TraducirControlesRecursivo(this, traducciones);
+        }
+
+        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
+                {
+                    c.Text = traducciones[c.Tag.ToString()];
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControlesRecursivo(c, traducciones);
+                }
+            }
+        }
+
+        #endregion
         private void ConfigurarEstilos()
         {
             // ---- CONFIGURACIÓN DE COLORES BASE ----

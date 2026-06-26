@@ -132,8 +132,9 @@
             this.ClientSize = new System.Drawing.Size(510, 401);
             this.Controls.Add(this.panelLogin);
             this.Name = "Login";
-            this.Tag = "login";
-            this.Text = "Form1";
+            this.ShowIcon = false;
+            this.Tag = "Login";
+            this.Load += new System.EventHandler(this.Login_Load);
             this.panelLogin.ResumeLayout(false);
             this.panelLogin.PerformLayout();
             this.ResumeLayout(false);

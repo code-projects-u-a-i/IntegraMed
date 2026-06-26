@@ -1,4 +1,5 @@
 ﻿using BE;
+using BLL.Servicios;
 using DAL;
 using System;
 using System.Collections.Generic;
@@ -12,16 +13,16 @@ namespace BLL
     {
         public void AgregarHijoAFamilia(Familia familia, Perfil hijo)
         {
-            if(hijo.Contiene(familia.Nombre))
+            if(hijo.Contiene(familia.Tag))
             {
                 throw new Exception("Se detectó una relación cíclica. El perfil seleccionado ya existe en la familia de permisos.");
             }
             PerfilDAL.AgregarHijoAFamilia(familia.Id, hijo.Id);
         }
 
-        public void CrearPerfil(string nombre, string tipo)
+        public void CrearPerfil(string nombre, string tag,string tipo)
         {
-            PerfilDAL.CrearPerfil(nombre,tipo);
+            PerfilDAL.CrearPerfil(nombre,tag,tipo);
         }
 
         public string EliminarPerfil(int id)
@@ -29,8 +30,6 @@ namespace BLL
             String rta = PerfilDAL.EliminarPerfil(id);
             return EvaluarRta(rta);
         }
-
-      
 
         public List<Perfil> ObtenerFamiliasRaiz()
         {
@@ -66,25 +65,22 @@ namespace BLL
         {
             return PerfilDAL.Listar();
         }
-        
-        private string EvaluarRta(string rta)
+        public void QuitarPerfilAUsuario(int usuario, int perfil)
         {
-
-            switch(rta) 
-            {
-                case "TIENE_HIJOS":
-                    throw new Exception("El perfil seleccionado es una familia de perfiles, debe vaciarlo antes de eliminarlo");
-
-                case "ES_HIJO":
-                    throw new Exception("El perfil seleccionado ya esta asignado a una familia, debe desasociarlo de todas las familias antes de eliminarlo");
-
-                case "TIENE_USUARIOS":
-                    throw new Exception("El perfil seleccionado ya esta asignado a un usuario del sistema, debe desasociarlo del usuario para poder eliminarlo");
-                case "LIBRE":
-                    return rta;
-                default: throw new Exception("No se pudo eliminar el perfil");
-            }
+            PerfilDAL.QuitarComponenteDeUsuario(usuario, perfil);
         }
+
+        public void EditarPerfil(int id, string nombre)
+        {
+            PerfilDAL.EditarPerfil(id, nombre);
+        }
+
+        public string[] ObtenerTagsPermisos()
+        {
+            return PermisoTag.PermisosNombreTags;
+        }
+
+       
         public void AsignarRolAUsuario(int idUsuario, int idFamilia)
         {
             PerfilDAL.AsignarComponenteAUsuario(idUsuario, idFamilia);  
@@ -137,14 +133,25 @@ namespace BLL
             return perfil;
         }
 
-        public void QuitarPerfilAUsuario(int usuario, int perfil)
+        private string EvaluarRta(string rta)
         {
-            PerfilDAL.QuitarComponenteDeUsuario(usuario, perfil);
+
+            switch (rta)
+            {
+                case "TIENE_HIJOS":
+                    throw new Exception("El perfil seleccionado es una familia de perfiles, debe vaciarlo antes de eliminarlo");
+
+                case "ES_HIJO":
+                    throw new Exception("El perfil seleccionado ya esta asignado a una familia, debe desasociarlo de todas las familias antes de eliminarlo");
+
+                case "TIENE_USUARIOS":
+                    throw new Exception("El perfil seleccionado ya esta asignado a un usuario del sistema, debe desasociarlo del usuario para poder eliminarlo");
+                case "LIBRE":
+                    return rta;
+                default: throw new Exception("No se pudo eliminar el perfil");
+            }
         }
 
-        public void EditarPerfil(int id, string nombre)
-        {
-            PerfilDAL.EditarPerfil(id, nombre);
-        }
+
     }
 }

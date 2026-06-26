@@ -1,6 +1,7 @@
 ﻿using BE;
 using BLL;
 using BLL.Servicios;
+using Seguridad;
 using SistemaTurnosUI;
 using System;
 using System.Collections.Generic;
@@ -14,22 +15,30 @@ using System.Windows.Forms;
 
 namespace SistemaTurnos
 {
-    public partial class RegistrarseForm : Form
+    /// <summary>
+    /// Creacion de usuarios se le asignan permisos si no el usuario se crea y no puede hacer nada
+    /// </summary>
+    public partial class RegistrarseForm : Form, IIdiomaObserver
     {
         AdministrarPermisosService admPermisosService = new AdministrarPermisosService();
         public RegistrarseForm()
         {
             InitializeComponent();
             this.Load += new System.EventHandler(this.RegistrarseForm_Load);
+            IdiomaService.Suscribir(this);
+            if (IdiomaService.TraduccionesActuales != null)
+            {
+                this.UpdateIdioma(IdiomaService.TraduccionesActuales);
+            }
 
         }
         private UsuarioBL usuarioBL = new UsuarioBL();
         private void RegistrarseForm_Load(object sender, EventArgs e)
         {
             ActualizarTreeViewFamilias();
-            //ConfigurarEstilo();
+            //ConfigurarEstilo(); //TODO: ponerle estilos a este form
         }
-
+        #region Carga de Datos e Inicialización de Estructuras
         private void ActualizarTreeViewFamilias()
         {
             treeView1.Nodes.Clear();
@@ -69,6 +78,7 @@ namespace SistemaTurnos
             }
         }
 
+        #endregion
 
         // registrarse
         private void button1_Click(object sender, EventArgs e)
@@ -101,7 +111,36 @@ namespace SistemaTurnos
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void ConfigurarEstilo()
+        
+        #region Implementación del Patrón Observer (IIdiomaObserver)
+        public void UpdateIdioma(Dictionary<string, string> traducciones)
+        {
+            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
+            {
+                this.Text = traducciones[this.Tag.ToString()];
+            }
+
+            TraducirControlesRecursivo(this, traducciones);
+        }
+
+        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
+                {
+                    c.Text = traducciones[c.Tag.ToString()];
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControlesRecursivo(c, traducciones);
+                }
+            }
+        }
+        #endregion
+
+        private void ConfigurarEstilo() /// volver a hacer
         {
 
             this.BackColor = Color.FromArgb(190, 220, 230);

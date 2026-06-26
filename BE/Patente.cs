@@ -18,10 +18,10 @@ namespace BE
             throw new NotSupportedException("Una patente no puede tener hijos.");
         }
 
-        public override bool Contiene(string patenteNombre)
+        public override bool Contiene(string patenteTag)
         {
-            return !string.IsNullOrEmpty(patenteNombre) &&
-                   Nombre.Equals(patenteNombre, StringComparison.OrdinalIgnoreCase);
+            return !string.IsNullOrEmpty(patenteTag) &&
+                   Tag.Equals(patenteTag, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

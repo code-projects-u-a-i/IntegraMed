@@ -10,7 +10,9 @@ using BLL;
 using System.Collections.Generic;
 
 namespace SistemaTurnosUI
-{
+{/// <summary>
+/// entrada de la app, selecciona idioma y login
+/// </summary>
     public partial class Login : Form, IIdiomaObserver
     {
         private ComboBox cmbIdiomas;
@@ -20,18 +22,130 @@ namespace SistemaTurnosUI
         public Login()
         {
             InitializeComponent();
-            this.Load += new System.EventHandler(this.Form1_Load);
+            
+            #region Registrar Idioma
             IdiomaService.Suscribir(this);
+            #endregion
         }
-        
 
-        private void Form1_Load(object sender, EventArgs e)
+
+        private void Login_Load(object sender, EventArgs e)
         {
             ConfigurarEstilo();
             ConfigurarSelectorIdioma();
-            
+        }
+   
+
+        #region Eventos de Controles (Actions)
+        //iniciar sesion
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (textBox1.Text.Length > 0 && textBox2.Text.Length > 0)
+            {
+                try
+                {
+                    var result = authService.Login(textBox1.Text, textBox2.Text, Convert.ToInt32(cmbIdiomas.SelectedValue));
+
+                    ManejarResult(result);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Debe ingresar usuario y contraseña para continuar");
+            }
         }
 
+        private void CmbIdiomas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            if (cmbIdiomas.SelectedIndex != -1)
+            {
+                string idiomaSeleccionado = cmbIdiomas.SelectedItem.ToString();
+                // cambio idioma segun seleccion
+                IdiomaService.CambiarIdioma(Convert.ToInt32(cmbIdiomas.SelectedValue));
+                // esconder seleccion y visibilizar el login
+                cmbIdiomas.Visible = false;
+                panelLogin.Visible = true;
+            }
+
+        }
+
+        #endregion
+
+        #region Implementación del Patrón Observer (IIdiomaObserver)
+
+        public void UpdateIdioma(Dictionary<string, string> traducciones)
+        {
+            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
+            {
+                this.Text = traducciones[this.Tag.ToString()];
+            }
+
+            TraducirControlesRecursivo(this, traducciones);
+        }
+
+        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
+                {
+                    c.Text = traducciones[c.Tag.ToString()];
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControlesRecursivo(c, traducciones);
+                }
+            }
+        }
+        #endregion
+
+        
+        private void ManejarResult(LoginResult result)
+        {
+            switch (result)
+            {
+                case LoginResult.Exito:
+                    MessageBox.Show("¡Bienvenido al sistema!", "Inicio de Sesión", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.Hide();
+                    MenuPrincipalForm menuForm = new MenuPrincipalForm(Convert.ToInt32(cmbIdiomas.SelectedValue));
+                    menuForm.ShowDialog();
+                    this.Close();
+
+                    break;
+
+                case LoginResult.CredencialesInvalidas:
+                    MessageBox.Show("Usuario o contraseña incorrectos. Por favor, intente nuevamente.", "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    textBox2.Clear();
+                    textBox2.Focus();
+                    break;
+
+                case LoginResult.UsuarioBloqueado:
+                    MessageBox.Show("Esta cuenta se encuentra bloqueada por superar el límite de intentos fallidos. Contacte al administrador.", "Cuenta Bloqueada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+
+                case LoginResult.UsuarioNoEncontrado:
+                    MessageBox.Show("Usuario o contraseña incorrectos.", "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+
+                default:
+                    MessageBox.Show("Ocurrió un estado inesperado durante el inicio de sesión.", "Error Desconocido", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+            }
+        }
+
+ 
+
+
+
+
+        #region Inicialización y Estilos de Interfaz (UI)
         private void ConfigurarSelectorIdioma()
         {
 
@@ -68,102 +182,6 @@ namespace SistemaTurnosUI
                 cmbIdiomas.SelectedIndex = -1;
             });
         }
-        private void CmbIdiomas_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            
-            if(cmbIdiomas.SelectedIndex != -1)
-            {
-                string idiomaSeleccionado = cmbIdiomas.SelectedItem.ToString();
-                
-                IdiomaService.CambiarIdioma(Convert.ToInt32(cmbIdiomas.SelectedValue));
-                
-                cmbIdiomas.Visible = false;
-                panelLogin.Visible = true;
-            }
-            
-        }
-
-        //iniciar sesion
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (textBox1.Text.Length > 0 && textBox2.Text.Length > 0)
-            {
-                try
-                {
-                    var result = authService.Login(textBox1.Text, textBox2.Text);
-
-                    ManejarResult(result);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Debe ingresar usuario y contraseña para continuar");
-            }
-        }
-
-        private void ManejarResult(LoginResult result)
-        {
-            switch (result)
-            {
-                case LoginResult.Exito:
-                    MessageBox.Show("¡Bienvenido al sistema!", "Inicio de Sesión", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Hide();
-                    MenuPrincipalForm menuForm = new MenuPrincipalForm();
-                    menuForm.ShowDialog();
-                    this.Close();
-
-                    break;
-
-                case LoginResult.CredencialesInvalidas:
-                    MessageBox.Show("Usuario o contraseña incorrectos. Por favor, intente nuevamente.", "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    textBox2.Clear();
-                    textBox2.Focus();
-                    break;
-
-                case LoginResult.UsuarioBloqueado:
-                    MessageBox.Show("Esta cuenta se encuentra bloqueada por superar el límite de intentos fallidos. Contacte al administrador.", "Cuenta Bloqueada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
-
-                case LoginResult.UsuarioNoEncontrado:
-                    MessageBox.Show("Usuario o contraseña incorrectos.", "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
-
-                default:
-                    MessageBox.Show("Ocurrió un estado inesperado durante el inicio de sesión.", "Error Desconocido", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
-            }
-        }
-
-        public void UpdateIdioma(Dictionary<string, string> traducciones)
-        {
-            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
-            {
-                this.Text = traducciones[this.Tag.ToString()];
-            }
-
-            TraducirControlesRecursivo(this, traducciones);
-        }
-
-        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
-        {
-            foreach (Control c in contenedor.Controls)
-            {
-                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
-                {
-                    c.Text = traducciones[c.Tag.ToString()];
-                }
-
-                if (c.HasChildren)
-                {
-                    TraducirControlesRecursivo(c, traducciones);
-                }
-            }
-        }
 
         private void ConfigurarEstilo()
         {
@@ -173,7 +191,6 @@ namespace SistemaTurnosUI
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.Text = "Sistema de Gestión de Salud - Ingreso";
 
 
             panelLogin.BackColor = Color.FromArgb(40, 50, 55);
@@ -223,7 +240,7 @@ namespace SistemaTurnosUI
 
             this.AcceptButton = button1;
         }
+        #endregion
 
-       
     }
 }
