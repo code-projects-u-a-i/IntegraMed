@@ -113,7 +113,7 @@ namespace SistemaTurnosUI
                 case LoginResult.Exito:
                     MessageBox.Show("¡Bienvenido al sistema!", "Inicio de Sesión", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Hide();
-                    MenuPrincipalForm menuForm = new MenuPrincipalForm(Convert.ToInt32(cmbIdiomas.SelectedValue));
+                    MenuPrincipalForm menuForm = new MenuPrincipalForm();
                     menuForm.ShowDialog();
                     this.Close();
 

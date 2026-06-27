@@ -21,12 +21,10 @@ namespace SistemaTurnos
     {
 
         private AuthService authService = new AuthService();
-        private int idiomaInicial;
 
-        public MenuPrincipalForm( int idIdioma)
+        public MenuPrincipalForm( )
         {
             InitializeComponent();
-            idiomaInicial=idIdioma;
             IdiomaService.Suscribir(this);
             CargarPermisosUser();
         
@@ -92,7 +90,7 @@ namespace SistemaTurnos
             this.menuStrip1.BackColor = SystemColors.Control;
             this.menuStrip1.Padding = new Padding(6, 6, 6, 6);
             this.menuStrip1.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
-            IdiomaService.CambiarIdioma(idiomaInicial);
+            IdiomaService.CambiarIdioma(SessionManager.getInstance().IdiomaActual);
         }
 
         private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)

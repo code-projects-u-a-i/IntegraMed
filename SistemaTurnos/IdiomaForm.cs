@@ -40,7 +40,6 @@ namespace SistemaTurnos
             Button botonPresionado = (Button)sender;
 
             int idIdioma = Convert.ToInt32(botonPresionado.Tag);
-            SessionManager.getInstance().IdiomaActual = idIdioma;
             IdiomaService.CambiarIdioma(idIdioma);
 
 
