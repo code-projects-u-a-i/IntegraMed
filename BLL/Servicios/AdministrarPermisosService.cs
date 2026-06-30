@@ -13,10 +13,6 @@ namespace BLL
     {
         public void AgregarHijoAFamilia(Familia familia, Perfil hijo)
         {
-            if(hijo.Contiene(familia.Tag))
-            {
-                throw new Exception("Se detectó una relación cíclica. El perfil seleccionado ya existe en la familia de permisos.");
-            }
             PerfilDAL.AgregarHijoAFamilia(familia.Id, hijo.Id);
         }
 
@@ -151,7 +147,6 @@ namespace BLL
                 default: throw new Exception("No se pudo eliminar el perfil");
             }
         }
-
 
     }
 }

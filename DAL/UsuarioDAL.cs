@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using BE;
 
 namespace DAL
@@ -17,6 +18,9 @@ namespace DAL
             string userEsc = dao.Esc(nuevoUsuario.Username);
             string passEsc = dao.Esc(nuevoUsuario.Password);
             string mailEsc = dao.Esc(nuevoUsuario.Mail);
+            string idiomaValue = (nuevoUsuario.IdiomaDefault != null)
+                ? nuevoUsuario.IdiomaDefault.Id.ToString()
+                : "NULL";
 
             // Seteamos explícitamente IntentosFallidos en 0 y Bloqueado en 0 para el alta
             string sqlInsert = $@"
@@ -25,14 +29,16 @@ namespace DAL
                 Usuario_Password,
                 Usuario_Mail,
                 Usuario_IntentosFallidos,
-                Usuario_Bloqueado
+                Usuario_Bloqueado,
+                Usuario_IdiomaDefault
             )
             VALUES (
                 N'{userEsc}',
                 '{passEsc}',
                 '{mailEsc}',
                 0,
-                0
+                0,
+                {idiomaValue} 
             );
             SELECT SCOPE_IDENTITY();";
 
@@ -52,7 +58,7 @@ namespace DAL
             var dao = new DAO();
 
             string sql = $@"
-            SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_Mail ,Usuario_IntentosFallidos, Usuario_Bloqueado
+            SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_Mail ,Usuario_IntentosFallidos, Usuario_Bloqueado, Usuario_IdiomaDefault
             FROM Usuario
             WHERE Usuario_ID = {id};";
 
@@ -69,7 +75,7 @@ namespace DAL
             var dao = new DAO();
 
             string sql = $@"
-            SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_Mail,Usuario_IntentosFallidos, Usuario_Bloqueado
+            SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_Mail,Usuario_IntentosFallidos, Usuario_Bloqueado, Usuario_IdiomaDefault
             FROM Usuario
             WHERE Usuario_Username = N'{dao.Esc(username)}';";
 
@@ -84,14 +90,18 @@ namespace DAL
         public static void ActualizarPorId(Usuario usuario)
         {
             var dao = new DAO();
+            int idiomaValue = (usuario.IdiomaDefault != null)
+                ? usuario.IdiomaDefault.Id
+                : 0;
 
             string sqlUpdate = $@"
             UPDATE Usuario SET
                 Usuario_Username = N'{dao.Esc(usuario.Username)}',
                 Usuario_Password = N'{dao.Esc(usuario.Password)}',
-                Usuario_Mail,= N'{dao.Esc(usuario.Mail)}',
+                Usuario_Mail = N'{dao.Esc(usuario.Mail)}', 
                 Usuario_IntentosFallidos = {usuario.IntentosFallidos},
-                Usuario_Bloqueado = {dao.BoolToBit(usuario.Bloqueado)}
+                Usuario_Bloqueado = {dao.BoolToBit(usuario.Bloqueado)},
+                Usuario_IdiomaDefault = {idiomaValue}
             WHERE Usuario_ID = {usuario.Id};";
 
             dao.ExecuteNonQueryFuntion(sqlUpdate);
@@ -129,7 +139,7 @@ namespace DAL
             var dao = new DAO();
 
             string sql = @"
-SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_Mail ,Usuario_IntentosFallidos, Usuario_Bloqueado
+SELECT Usuario_ID, Usuario_Username, Usuario_Password, Usuario_Mail ,Usuario_IntentosFallidos, Usuario_Bloqueado,Usuario_IdiomaDefault
 FROM Usuario
 ORDER BY Usuario_ID;
 ";
@@ -145,7 +155,7 @@ ORDER BY Usuario_ID;
         }
 
 
-        private static Usuario MapUsuario(DataRow dr)
+        private static Usuario MapUsuario(DataRow dr) // cambio
         {
             return new Usuario
             {
@@ -154,7 +164,12 @@ ORDER BY Usuario_ID;
                 Password = dr["Usuario_Password"] != DBNull.Value ? dr["Usuario_Password"].ToString() : string.Empty,
                 Mail = dr["Usuario_Mail"] != DBNull.Value ? dr["Usuario_Mail"].ToString() : string.Empty,
                 IntentosFallidos = dr["Usuario_IntentosFallidos"] != DBNull.Value ? Convert.ToInt32(dr["Usuario_IntentosFallidos"]) : 0,
-                Bloqueado = dr["Usuario_Bloqueado"] != DBNull.Value && Convert.ToBoolean(dr["Usuario_Bloqueado"])
+                Bloqueado = dr["Usuario_Bloqueado"] != DBNull.Value && Convert.ToBoolean(dr["Usuario_Bloqueado"]),
+                //busco idioma si existe el default
+                IdiomaDefault = dr["Usuario_IdiomaDefault"] != DBNull.Value
+                ? IdiomaDAL.ListarIdiomas().FirstOrDefault(x => x.Id == Convert.ToInt32(dr["Usuario_IdiomaDefault"]))
+                : null
+
             };
         }
 

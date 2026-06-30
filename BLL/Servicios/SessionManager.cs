@@ -67,13 +67,7 @@ namespace BLL.Servicios
         {
 
             get { return _idiomaActual; }
-            set
-            {
-                _idiomaActual = value;
- 
-                // este metodo dispara el aviso automáticamente a los formularios suscriptos
-                IdiomaCambiado?.Invoke(_idiomaActual);
-            }
+            set {_idiomaActual = value; }
         }
 
         public bool HaySessionIniciada()
@@ -85,10 +79,7 @@ namespace BLL.Servicios
         {
             return _usuario;
         }
-        /// <summary>
-        ///  PREGUNTAR!! si esta bien
-        /// </summary>
-        public event Action<int> IdiomaCambiado;
 
+        /// SE SACO EL EVENT
     }
 }

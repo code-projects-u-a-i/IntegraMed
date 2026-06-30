@@ -17,5 +17,14 @@ namespace BLL
         {
             return IdiomaDAL.ListarIdiomas();
         }
+
+        public int AgregarIdioma(Idioma idioma)
+        {
+           return IdiomaDAL.AgregarIdioma(idioma);
+        }
+        public void EliminarIdioma (int idIdioma)
+        {
+            IdiomaDAL.EliminarIdioma(idIdioma);
+        }
     }
 }

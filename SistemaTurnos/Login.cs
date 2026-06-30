@@ -11,9 +11,9 @@ using System.Collections.Generic;
 
 namespace SistemaTurnosUI
 {/// <summary>
-/// entrada de la app, selecciona idioma y login
+/// entrada de la app, selecciona idioma y login, CAMBIO! YA NO ESTA SUSCRIPTA AL IDIOMA
 /// </summary>
-    public partial class Login : Form, IIdiomaObserver
+    public partial class Login : Form
     {
         private ComboBox cmbIdiomas;
         private Label lblSeleccioneIdioma;
@@ -23,9 +23,6 @@ namespace SistemaTurnosUI
         {
             InitializeComponent();
             
-            #region Registrar Idioma
-            IdiomaService.Suscribir(this);
-            #endregion
         }
 
 
@@ -44,8 +41,7 @@ namespace SistemaTurnosUI
             {
                 try
                 {
-                    var result = authService.Login(textBox1.Text, textBox2.Text, Convert.ToInt32(cmbIdiomas.SelectedValue));
-
+                    var result = authService.Login(textBox1.Text, textBox2.Text, Convert.ToInt32(comboBox1.SelectedValue), checkBox1.Checked);
                     ManejarResult(result);
                 }
                 catch (Exception ex)
@@ -75,36 +71,6 @@ namespace SistemaTurnosUI
         }
 
         #endregion
-
-        #region Implementación del Patrón Observer (IIdiomaObserver)
-
-        public void UpdateIdioma(Dictionary<string, string> traducciones)
-        {
-            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
-            {
-                this.Text = traducciones[this.Tag.ToString()];
-            }
-
-            TraducirControlesRecursivo(this, traducciones);
-        }
-
-        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
-        {
-            foreach (Control c in contenedor.Controls)
-            {
-                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
-                {
-                    c.Text = traducciones[c.Tag.ToString()];
-                }
-
-                if (c.HasChildren)
-                {
-                    TraducirControlesRecursivo(c, traducciones);
-                }
-            }
-        }
-        #endregion
-
         
         private void ManejarResult(LoginResult result)
         {
@@ -140,69 +106,39 @@ namespace SistemaTurnosUI
             }
         }
 
- 
 
 
+        private void ConfigurarSelectorIdioma()
+        {
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.Font = new Font("Segoe UI", 11);
+            comboBox1.Size = new Size(200, 30);
+
+            comboBox1.DataSource = null;
+            comboBox1.DataSource = IdiomaBL.Obtener();
+            comboBox1.DisplayMember = "Nombre";
+            comboBox1.ValueMember = "Id";
+            comboBox1.SelectedIndex = -1;
+        }
 
 
         #region Inicialización y Estilos de Interfaz (UI)
-        private void ConfigurarSelectorIdioma()
-        {
-
-            
-            lblSeleccioneIdioma = new Label();
-            lblSeleccioneIdioma.Text = "Seleccione su idioma / Select your language:";
-            lblSeleccioneIdioma.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            lblSeleccioneIdioma.ForeColor = Color.FromArgb(40, 50, 55);
-            lblSeleccioneIdioma.AutoSize = true;
-            lblSeleccioneIdioma.Location = new Point((this.ClientSize.Width - 300) / 2, 160);
-            this.Controls.Add(lblSeleccioneIdioma);
-
-            
-            cmbIdiomas = new ComboBox();
-            cmbIdiomas.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbIdiomas.Font = new Font("Segoe UI", 11);
-            cmbIdiomas.Size = new Size(200, 30);
-            cmbIdiomas.Location = new Point((this.ClientSize.Width - 200) / 2, 190);      
-
-            cmbIdiomas.DataSource = null;
-            cmbIdiomas.DataSource = IdiomaBL.Obtener();
-            cmbIdiomas.DisplayMember = "Nombre";
-            cmbIdiomas.ValueMember = "Id";
-            cmbIdiomas.SelectedIndex = -1;
-
-            cmbIdiomas.SelectedIndexChanged += CmbIdiomas_SelectedIndexChanged;
-            this.Controls.Add(cmbIdiomas);
-
-            panelLogin.Visible = false;
-
-            // Esta línea le ordena a Windows Forms: "Terminá de renderizar los controles nuevos, 
-            // y un milisegundo después, poné el combo en blanco sin disparar errores"
-            this.BeginInvoke((MethodInvoker)delegate {
-                cmbIdiomas.SelectedIndex = -1;
-            });
-        }
-
         private void ConfigurarEstilo()
         {
-
             this.BackColor = Color.FromArgb(190, 220, 230);
-            this.Size = new Size(450, 500);
+            this.Size = new Size(450, 520); 
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
 
-
             panelLogin.BackColor = Color.FromArgb(40, 50, 55);
-            panelLogin.Size = new Size(350, 400);
+            panelLogin.Size = new Size(350, 420);
             panelLogin.BorderStyle = BorderStyle.None;
-
 
             panelLogin.Location = new Point(
                 (this.ClientSize.Width - panelLogin.Width) / 2,
                 (this.ClientSize.Height - panelLogin.Height) / 2
             );
-
 
             label3.ForeColor = Color.White;
             label3.Font = new Font("Segoe UI", 16, FontStyle.Bold);
@@ -216,7 +152,10 @@ namespace SistemaTurnosUI
             label2.ForeColor = Color.FromArgb(160, 215, 190);
             label2.Font = new Font("Segoe UI", 9, FontStyle.Bold);
 
+            label5.ForeColor = Color.FromArgb(160, 215, 190);
+            label5.Font = new Font("Segoe UI", 9, FontStyle.Bold);
 
+            // Entradas de texto
             textBox1.BackColor = Color.FromArgb(43, 54, 59);
             textBox1.ForeColor = Color.FromArgb(160, 215, 190);
             textBox1.Font = new Font("Segoe UI", 11);
@@ -228,6 +167,15 @@ namespace SistemaTurnosUI
             textBox2.BorderStyle = BorderStyle.FixedSingle;
             textBox2.UseSystemPasswordChar = true;
 
+            // Estilo para el ComboBox1 (Selector de idiomas integrado)
+            comboBox1.BackColor = Color.FromArgb(43, 54, 59);
+            comboBox1.ForeColor = Color.FromArgb(160, 215, 190);
+            comboBox1.Font = new Font("Segoe UI", 11);
+            comboBox1.FlatStyle = FlatStyle.Flat;
+
+            checkBox1.ForeColor = Color.FromArgb(170, 185, 190);
+            checkBox1.Font = new Font("Segoe UI", 9, FontStyle.Regular);
+            checkBox1.BackColor = Color.Transparent;
 
             button1.FlatStyle = FlatStyle.Flat;
             button1.FlatAppearance.BorderSize = 1;
@@ -236,7 +184,6 @@ namespace SistemaTurnosUI
             button1.FlatAppearance.BorderColor = Color.FromArgb(0, 102, 102);
             button1.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             button1.Cursor = Cursors.Hand;
-
 
             this.AcceptButton = button1;
         }

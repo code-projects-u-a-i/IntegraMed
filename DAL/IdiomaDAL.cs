@@ -75,5 +75,30 @@ namespace DAL
             string sql = "DELETE FROM Idioma WHERE Idioma_Id = @Id";
             dao.ExecuteNonQueryFuntion(sql, new SqlParameter("@Id", id));
         }
+        
+        public static int AgregarIdioma(Idioma nuevoIdioma)
+        {
+            var dao = new DAO();
+
+            string nombreEsc = dao.Esc(nuevoIdioma.Nombre);
+
+            string sqlInsert = $@"
+            INSERT INTO Idioma (
+                Idioma_Nombre
+            )
+            VALUES (
+                N'{nombreEsc}'
+            );
+            SELECT SCOPE_IDENTITY();";
+
+            object resultado = dao.ExecuteScalarFunction(sqlInsert);
+
+            if (resultado != null && resultado != DBNull.Value)
+            {
+                return Convert.ToInt32(resultado);
+            }
+
+            return 0;
+        }
     }
 }

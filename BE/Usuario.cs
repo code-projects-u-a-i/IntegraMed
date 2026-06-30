@@ -10,6 +10,9 @@ namespace BE
         public string Mail { get; set; }
         public int IntentosFallidos { get; set; }
         public bool Bloqueado { get; set; }
+        public Idioma IdiomaDefault { get; set; }
+
+        public int DVH;
 
         private readonly List<Perfil> listaPerfiles = new List<Perfil>();
 
@@ -43,6 +46,7 @@ namespace BE
                 listaPerfiles.Add(perfil);
             }
         }
+
 
     }
 }

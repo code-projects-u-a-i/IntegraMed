@@ -180,7 +180,14 @@ namespace SistemaTurnos
             }
 
             Perfil componenteHijo = (Perfil)treeViewPerfilesPosibles.SelectedNode.Tag;
-         
+           
+            // validacion ciclica
+            if (EvaluarPadresDelNodo(treeViewFamilias.SelectedNode, componenteHijo.Id))
+            {
+                MessageBox.Show($"No se puede agregar '{componenteHijo.Nombre}' a '{familiaPadre.Nombre}' porque este elemento ya pertenece a la jerarquía superior de esta rama.", "Dependencia Cíclica", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             try
             {
                 if (componenteHijo is Familia subFamilia && !subFamilia.ObtenerPerfiles().Any())
@@ -260,6 +267,24 @@ namespace SistemaTurnos
             }
         }
         #endregion
+
+        private bool EvaluarPadresDelNodo(TreeNode FamiliaSeleccionada, int FamiliaHijaAgregada)
+        {
+            TreeNode nodoPadre = FamiliaSeleccionada.Parent;
+
+            while (nodoPadre != null) // mientras que haya un padre directo
+            {
+                if (nodoPadre.Tag is Familia familiaAncestro)
+                {
+                    if (familiaAncestro.Id == FamiliaHijaAgregada)
+                    {
+                        return true; // si el id de la familia concide con el id de la familia seleccionada para agregar true
+                    }
+                }
+                nodoPadre = nodoPadre.Parent; //subo de padre
+            }
+            return false; //no hay coincidencias
+        }
 
         #region Implementación del Patrón Observer (IIdiomaObserver)
         public void UpdateIdioma(Dictionary<string, string> traducciones)

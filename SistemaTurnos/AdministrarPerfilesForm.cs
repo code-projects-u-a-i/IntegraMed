@@ -91,39 +91,7 @@ namespace SistemaTurnos
         #endregion
 
 
-        #region Eventos de Controles (Actions)
-        //eliminar
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // condicion: NO SE PUEDE ELIMINAR UN PERFIL QUE ESTA SIENDO UTILIZADO POR UN USUARIO, ni tampoco que sea hijo de un perfil ni que sea padre de otros
-            // solo se puede borrar perfiles que no estan asignados a otro perfil y que no esten asignados a un usuario para preservar la integridad referencial en bd
-            if (treeViewPerfilesPosibles.SelectedNode == null)
-            {
-                MessageBox.Show("Por favor, para eliminar seleccione un perfil de la lista perfiles posibles a elegir. ", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            Perfil perfilAEliminar = (Perfil)treeViewPerfilesPosibles.SelectedNode.Tag;
-
-
-            DialogResult result = MessageBox.Show($"¿Está seguro de que desea eliminar definitivamente el perfil '{perfilAEliminar.Nombre}'?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.No) return;
-
-            try
-            {
-                admPermisosService.EliminarPerfil(perfilAEliminar.Id);
-
-                MessageBox.Show("Perfil eliminado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                CargarTodoElSistemaEnTreeView();
-                LimpiarIngresos();
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+        #region Eventos de Controles (Actions)      
 
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
@@ -282,7 +250,7 @@ namespace SistemaTurnos
 
             // ---- ESTILO DE BOTONES DE CONTROL (ELIMINAR / LIMPIAR) ----
             // El botón de acción destructiva (Eliminar) y el neutral (Limpiar) van delineados
-            var botonesDelineados = new List<System.Windows.Forms.Button> { btnLimpiar, button1 };
+            var botonesDelineados = new List<System.Windows.Forms.Button> { btnLimpiar };
             foreach (var btn in botonesDelineados)
             {
                 btn.FlatStyle = FlatStyle.Flat;

@@ -41,8 +41,6 @@ namespace SistemaTurnos
 
             int idIdioma = Convert.ToInt32(botonPresionado.Tag);
             IdiomaService.CambiarIdioma(idIdioma);
-
-
         }
 
         #region Carga Dinámica de interfaz

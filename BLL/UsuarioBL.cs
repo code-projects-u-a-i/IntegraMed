@@ -89,5 +89,17 @@ namespace BLL
             }
            return usuario;
         }
+/*
+        public int CalcularDVH(Usuario usuario)
+        {
+            string cadenaFila = usuario.Id.ToString()
+                  + usuario.Username
+                  + usuario.Password
+                  + usuario.Mail
+                  + usuario.IntentosFallidos.ToString()
+                  + usuario.Bloqueado.ToString()
+                  + usuario.IdiomaDefault.Id.ToString();
+        }
+*/
     }
 }

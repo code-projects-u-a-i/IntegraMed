@@ -27,7 +27,8 @@ namespace SistemaTurnos
             InitializeComponent();
             IdiomaService.Suscribir(this);
             CargarPermisosUser();
-        
+            this.WindowState = FormWindowState.Maximized;
+
         }
         #region Gestión de Permisos y Seguridad
 
@@ -175,7 +176,9 @@ namespace SistemaTurnos
 
         private void gestionarIdiomaToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Pronto", "Pronto", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            AgregarIdioma perfilForm = new AgregarIdioma();
+            perfilForm.MdiParent = this;
+            perfilForm.Show();
         }
 
         private void modificarMailToolStripMenuItem_Click(object sender, EventArgs e)

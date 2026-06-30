@@ -7,7 +7,16 @@ using System.Threading.Tasks;
 namespace BE
 {
     public class Familia : Perfil
-    {
+    {// cambio!
+        public override void AgregarHijo(Perfil p)
+        {
+            listaPerfiles.Add(p);
+        }
+
+        public override void QuitarHijo(Perfil p)
+        {
+            listaPerfiles.Remove(p);
+        }
         public override bool Contiene(string patenteTag)
         {
             if (base.Contiene(patenteTag)) return true; 

@@ -32,7 +32,6 @@
             this.lblEditar = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnEditar = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.treeViewPerfilesPosibles = new System.Windows.Forms.TreeView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -53,7 +52,6 @@
             this.groupBoxArbolEdicion.Controls.Add(this.lblEditar);
             this.groupBoxArbolEdicion.Controls.Add(this.textBox1);
             this.groupBoxArbolEdicion.Controls.Add(this.btnEditar);
-            this.groupBoxArbolEdicion.Controls.Add(this.button1);
             this.groupBoxArbolEdicion.Controls.Add(this.treeViewPerfilesPosibles);
             this.groupBoxArbolEdicion.Location = new System.Drawing.Point(141, 12);
             this.groupBoxArbolEdicion.Name = "groupBoxArbolEdicion";
@@ -82,26 +80,15 @@
             // 
             // btnEditar
             // 
-            this.btnEditar.Location = new System.Drawing.Point(226, 280);
+            this.btnEditar.Location = new System.Drawing.Point(18, 280);
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.btnEditar.Size = new System.Drawing.Size(153, 23);
+            this.btnEditar.Size = new System.Drawing.Size(361, 23);
             this.btnEditar.TabIndex = 9;
             this.btnEditar.Tag = "AdmPerfEditEditar";
             this.btnEditar.Text = "Editar Perfil";
             this.btnEditar.UseVisualStyleBackColor = true;
             this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(18, 280);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(153, 23);
-            this.button1.TabIndex = 8;
-            this.button1.Tag = "AdmPerfEditEliminar";
-            this.button1.Text = "Eliminar Perfil";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // treeViewPerfilesPosibles
             // 
@@ -242,7 +229,6 @@
 
         private System.Windows.Forms.GroupBox groupBoxArbolEdicion;
         private System.Windows.Forms.TreeView treeViewPerfilesPosibles;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnEditar;
         private System.Windows.Forms.Label lblEditar;
         private System.Windows.Forms.TextBox textBox1;
