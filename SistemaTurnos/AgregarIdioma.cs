@@ -213,11 +213,7 @@ namespace SistemaTurnos
             }
         }
 
-        private void RegistrarPuntoDeControl()
-        {
-            _caretaker.GuardarEstado(listaTraducciones);
-            btnDeshacer.Enabled = _caretaker.puedeDeshacer();
-        }
+       
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -255,6 +251,12 @@ namespace SistemaTurnos
                 }
             }
 
+        }
+
+        private void RegistrarPuntoDeControl()
+        {
+            _caretaker.GuardarEstado(listaTraducciones);
+            btnDeshacer.Enabled = _caretaker.puedeDeshacer();
         }
 
         private void btnDeshacer_Click(object sender, EventArgs e)

@@ -126,22 +126,20 @@ namespace SistemaTurnos
 
         private void bitacoraToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            BitacoraForm bitacoraForm = new BitacoraForm();
-            bitacoraForm.MdiParent = this;
-            bitacoraForm.Show();
+            BitacoraFormFactory fabrica = new BitacoraFormFactory();
+            fabrica.Abrir(this);
         }
 
         private void cambiarClaveToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            CambiarClaveForm cambiarClave = new CambiarClaveForm();
-            cambiarClave.MdiParent = this;
-            cambiarClave.Show();
+            CambiarClaveFormFactory cambiarClave = new CambiarClaveFormFactory();
+            cambiarClave.Abrir(this);
         }
 
         private void seleccionarIdiomaToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            IdiomaForm idiomaForm = new IdiomaForm();
-            idiomaForm.Show();
+            IdiomaFormFactory idiomaForm = new IdiomaFormFactory();
+            idiomaForm.Abrir(this);
         }
 
         private void desbloqueoDeUsuarioToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -156,9 +154,8 @@ namespace SistemaTurnos
 
         private void crearUsuariosToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            RegistrarseForm menu = new RegistrarseForm();
-            menu.MdiParent = this;
-            menu.Show();
+            RegistrarseFormFactory menu = new RegistrarseFormFactory();
+            menu.Abrir(this);
         }
 
         private void restaurarMailAnteriorToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -168,30 +165,26 @@ namespace SistemaTurnos
 
         private void gestionarPerfilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AdministrarPerfilesForm eliminarPerfiles = new AdministrarPerfilesForm();
-            eliminarPerfiles.MdiParent = this;
-            eliminarPerfiles.Show();
+            AdministrarPerfilesFormFactory eliminarPerfiles = new AdministrarPerfilesFormFactory();
+            eliminarPerfiles.Abrir(this);
         }
 
         private void asignarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GestionPerfilForm perfilForm = new GestionPerfilForm();
-            perfilForm.MdiParent = this;
-            perfilForm.Show();
+            GestionPerfilFormFactory perfilForm = new GestionPerfilFormFactory();
+            perfilForm.Abrir(this);
         }
 
         private void asignarPerfilesAUsuarioToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AsignarPerfilesUsuarioForm perfilForm = new AsignarPerfilesUsuarioForm();
-            perfilForm.MdiParent = this;
-            perfilForm.Show();
+            AsignarPerfilesUsuarioFormFactory perfilForm = new AsignarPerfilesUsuarioFormFactory();
+            perfilForm.Abrir(this);
         }
 
         private void gestionarIdiomaToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AgregarIdioma perfilForm = new AgregarIdioma();
-            perfilForm.MdiParent = this;
-            perfilForm.Show();
+            AgregarIdiomaFormFactory perfilForm = new AgregarIdiomaFormFactory();
+            perfilForm.Abrir(this);
         }
 
         private void modificarMailToolStripMenuItem_Click(object sender, EventArgs e)
