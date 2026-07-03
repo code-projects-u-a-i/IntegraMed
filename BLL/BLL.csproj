@@ -51,6 +51,7 @@
     <Compile Include="Servicios\IdiomaService.cs" />
     <Compile Include="Servicios\PermisoTag.cs" />
     <Compile Include="Servicios\SessionManager.cs" />
+    <Compile Include="Servicios\TraduccionCaretaker.cs" />
     <Compile Include="TraduccionBL.cs" />
     <Compile Include="UsuarioBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
