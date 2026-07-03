@@ -105,7 +105,19 @@ namespace BLL
             {
                 if (p is PerfilDecorator dec)
                 {
-                   p.Contiene(p.Tag);
+                    try
+                    {
+                        p.Contiene(p.Tag);
+                    }
+                    catch (Exception)
+                    {
+                        //esto seria lo nuevo, la novedad es que solo requiere un parametro, que es el permiso por el cual fue denegado
+                        BitacoraAdapter adapter = new BitacoraAdapter();
+                        adapter.RegistrarFallido(p.Tag);
+                        throw;
+                    }
+                  
+                    
                 }
             }
         }

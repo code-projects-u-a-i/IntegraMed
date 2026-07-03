@@ -47,6 +47,7 @@
     <Compile Include="IdiomaBL.cs" />
     <Compile Include="Servicios\AdministrarPermisosService.cs" />
     <Compile Include="Servicios\AuthService.cs" />
+    <Compile Include="Servicios\BitacoraAdapter.cs" />
     <Compile Include="Servicios\IdiomaService.cs" />
     <Compile Include="Servicios\PermisoTag.cs" />
     <Compile Include="Servicios\SessionManager.cs" />

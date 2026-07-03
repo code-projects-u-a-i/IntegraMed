@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IBitacoraAdapter.cs" />
     <Compile Include="CryptoManager.cs" />
     <Compile Include="IIdiomaObserver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
