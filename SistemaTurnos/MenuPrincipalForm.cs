@@ -21,7 +21,7 @@ namespace SistemaTurnos
     {
 
         private AuthService authService = new AuthService();
-
+        private UsuarioBL usuarioBL = new UsuarioBL();
         public MenuPrincipalForm( )
         {
             InitializeComponent();
@@ -34,9 +34,22 @@ namespace SistemaTurnos
 
         private void CargarPermisosUser()
         {
+            Usuario usuario= SessionManager.getInstance().ObtenerUsuario();
+
+            try
+            {
+                usuarioBL.EvaluarPerfilesUsuario(SessionManager.getInstance().ObtenerUsuario());
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message, "Sera desconectado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             if (this.menuStrip1 != null)
             {
-                EvaluarPermisosMenu(this.menuStrip1.Items, SessionManager.getInstance().ObtenerUsuario());
+                EvaluarPermisosMenu(this.menuStrip1.Items, usuario);
             }
         }
 

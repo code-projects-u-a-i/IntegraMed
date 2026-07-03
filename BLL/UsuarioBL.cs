@@ -4,6 +4,7 @@ using DAL;
 using Seguridad;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BLL
 {
@@ -88,6 +89,25 @@ namespace BLL
                 usuario.AgregarPermiso(item);
             }
            return usuario;
+        }
+
+        public void EvaluarPerfilesUsuario(Usuario usuario)
+        {
+            List<Perfil> perfilesDecorados = new List<Perfil>();
+            
+            foreach (var perfilBase in usuario.listaReadonlyPerfiles) 
+            {
+                var perfilConDecorador = new DiasDeAtencion(perfilBase);
+                perfilesDecorados.Add(perfilConDecorador);
+            }
+
+            foreach (var p in perfilesDecorados)
+            {
+                if (p is PerfilDecorator dec)
+                {
+                   p.Contiene(p.Tag);
+                }
+            }
         }
 /*
         public int CalcularDVH(Usuario usuario)
