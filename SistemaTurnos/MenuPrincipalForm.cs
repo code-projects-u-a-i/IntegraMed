@@ -22,6 +22,7 @@ namespace SistemaTurnos
 
         private AuthService authService = new AuthService();
         private UsuarioBL usuarioBL = new UsuarioBL();
+        private DVVBL dVVBL = new DVVBL();
         public MenuPrincipalForm( )
         {
             InitializeComponent();
@@ -105,12 +106,45 @@ namespace SistemaTurnos
             this.menuStrip1.Padding = new Padding(6, 6, 6, 6);
             this.menuStrip1.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
             IdiomaService.CambiarIdioma(SessionManager.getInstance().IdiomaActual);
+            EvaluarInconsistencia();
+        }
+
+        private bool EvaluarInconsistencia()
+        {
+            // si es admin y hay inconsistencia
+            if(SessionManager.getInstance().ObtenerUsuario().listaReadonlyPerfiles.Any(x=> x.Tag.Equals("ADMIN_FULL")) && SessionManager.getInstance().IntegridadBaseDatos)
+            {
+                DialogResult resultado = MessageBox.Show(
+                "Error de Integridad del Sistema" + "\r\n" + "Se ha detectado una inconsistencia en los dígitos verificadores de la base de datos (Tabla: Usuario). Debe subsanarla para continuar", 
+                    "Inconsistencia de Datos",                                                              
+                    MessageBoxButtons.YesNo,                                                            
+                    MessageBoxIcon.Warning                                                                 
+                    );
+
+                if (resultado == DialogResult.Yes)
+                {
+                    dVVBL.RestaurarIntegridad();
+                    MessageBox.Show("Se restauro la integridad exitosamente");
+                    return true; 
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!EvaluarInconsistencia())
+            {
+                MessageBox.Show("Debe corregir el error de integridad para que otros usuarios puedan utilizar la aplicacion", "Desconectarse", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             try
             {
+                
                 authService.Logout();
                 MessageBox.Show("Se desconecto exitosamente", "Desconectado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Hide();
@@ -149,7 +183,7 @@ namespace SistemaTurnos
 
         private void restaurarIntegridadToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Pronto", "Pronto", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            EvaluarInconsistencia();
         }
 
         private void crearUsuariosToolStripMenuItem1_Click(object sender, EventArgs e)

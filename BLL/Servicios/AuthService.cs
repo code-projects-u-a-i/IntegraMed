@@ -14,7 +14,8 @@ namespace BLL.Servicios
         UsuarioNoEncontrado,
         UsuarioBloqueado,
         CredencialesInvalidas,
-        BloqueadoPorIntentos
+        BloqueadoPorIntentos,
+        IntegridadViolada
     }
     public class AuthService
     {
@@ -23,6 +24,7 @@ namespace BLL.Servicios
         private readonly IdiomaBL idiomaBL = new IdiomaBL();
         private readonly CryptoManager _crypto = new CryptoManager();
         private readonly AdministrarPermisosService _admPermisosService = new AdministrarPermisosService();
+        private readonly DVVBL _dVVBL = new DVVBL();
 
         public AuthService() { }
         public LoginResult Login(string username, string passwordIngresada, int idIdioma, bool checkDefault)
@@ -50,7 +52,16 @@ namespace BLL.Servicios
             
             if (coincidePassw(passwordIngresada, _crypto, usuario.Password))
             {
-                if ((checkDefault && idIdioma!=0) && usuario.IdiomaDefault?.Id !=idIdioma) // si el usuario no tenia seteado el default o si tenia distinto idioma default en la base, lo guardo  CAMBIO!!
+                usuario = _usuarioBL.ObtenerPermisos(usuario);
+                bool hayInconsistencias = _dVVBL.EvaluarInconsistencia();
+
+                if (hayInconsistencias && !EsAdmin(usuario.listaReadonlyPerfiles))
+                {
+                    return LoginResult.IntegridadViolada;
+                }   
+
+              
+                if ((checkDefault && idIdioma!=0) && usuario.IdiomaDefault?.Id !=idIdioma) 
                 {
                     usuario.IdiomaDefault = idiomaBL.Obtener().FirstOrDefault(x => x.Id ==idIdioma);
                     _usuarioBL.ActualizarUsuario(usuario);
@@ -60,8 +71,12 @@ namespace BLL.Servicios
                 {
                     IdiomaService.CambiarIdioma(usuario.IdiomaDefault.Id);
                 }
-                usuario = _usuarioBL.ObtenerPermisos(usuario);
                 SessionManager.getInstance().CrearSession(usuario);
+                
+                if (hayInconsistencias) 
+                {
+                    SessionManager.getInstance().IntegridadBaseDatos = true;
+                }
 
                 _bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Ingreso Exitoso", "Se blanquea intentos fallidos", string.Empty, SeveridadLog.Info);
 
@@ -91,6 +106,13 @@ namespace BLL.Servicios
             }
         }
 
+        private bool EsAdmin(IReadOnlyList<Perfil> listaReadonlyPerfiles)
+        {
+            if (listaReadonlyPerfiles == null) { return false; }
+           
+            return listaReadonlyPerfiles.Any(x => x.Tag != null && x.Tag.Equals("ADMIN_FULL"));
+        }
+
         private bool coincidePassw(string passwordIngresada, CryptoManager _crypto, string password)
         {
             string hashIngresado = _crypto.HashMD5(passwordIngresada);
@@ -99,9 +121,11 @@ namespace BLL.Servicios
 
         public void Logout()
         {
+           
             if (SessionManager.getInstance().ObtenerUsuario() != null)
             {
                 _bitacoraBL.IngresarBitacora(SessionManager.getInstance().ObtenerUsuario().Id, SessionManager.getInstance().ObtenerUsuario().Username, "Se cierra sesion", string.Empty, string.Empty, SeveridadLog.Info);
+                _dVVBL.RestaurarIntegridad();
                 SessionManager.getInstance().CerrarSesion();
             }
             else

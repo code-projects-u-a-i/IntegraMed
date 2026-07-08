@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Bitacora.cs" />
     <Compile Include="DiasDeAtencion.cs" />
+    <Compile Include="DVV.cs" />
     <Compile Include="Idioma.cs" />
     <Compile Include="TraduccionMemento.cs" />
     <Compile Include="Perfil.cs" />

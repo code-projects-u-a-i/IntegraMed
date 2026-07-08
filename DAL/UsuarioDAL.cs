@@ -30,7 +30,8 @@ namespace DAL
                 Usuario_Mail,
                 Usuario_IntentosFallidos,
                 Usuario_Bloqueado,
-                Usuario_IdiomaDefault
+                Usuario_IdiomaDefault,
+                DVH
             )
             VALUES (
                 N'{userEsc}',
@@ -38,7 +39,8 @@ namespace DAL
                 '{mailEsc}',
                 0,
                 0,
-                {idiomaValue} 
+                {idiomaValue},
+                {nuevoUsuario.DVH}
             );
             SELECT SCOPE_IDENTITY();";
 
@@ -101,7 +103,8 @@ namespace DAL
                 Usuario_Mail = N'{dao.Esc(usuario.Mail)}', 
                 Usuario_IntentosFallidos = {usuario.IntentosFallidos},
                 Usuario_Bloqueado = {dao.BoolToBit(usuario.Bloqueado)},
-                Usuario_IdiomaDefault = {idiomaValue}
+                Usuario_IdiomaDefault = {idiomaValue},
+                DVH = {usuario.DVH}
             WHERE Usuario_ID = {usuario.Id};";
 
             dao.ExecuteNonQueryFuntion(sqlUpdate);
@@ -154,6 +157,31 @@ ORDER BY Usuario_ID;
             return lista;
         }
 
+        public static long CalcularDVVUsuario()
+        {
+
+            var dao = new DAO();
+
+            string sqlSuma = "SELECT ISNULL(SUM(CAST(DVH AS BIGINT)), 0) FROM Usuario;";
+
+            object resultado = dao.ExecuteScalarFunction(sqlSuma);
+
+            return Convert.ToInt64(resultado);
+        }
+
+        public static long UpdateDvH(int id, long suma)
+        {
+
+            var dao = new DAO();
+
+            string sqlUpdateDVH = $@"
+            UPDATE Usuario 
+            SET DVH = {suma} 
+            WHERE Usuario_Id = {id};";
+
+            return dao.ExecuteNonQueryFuntion(sqlUpdateDVH);
+        }
+
 
         private static Usuario MapUsuario(DataRow dr) // cambio
         {
@@ -172,6 +200,10 @@ ORDER BY Usuario_ID;
 
             };
         }
+
+        
+
+
 
     }
 }

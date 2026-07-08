@@ -15,6 +15,7 @@ namespace BLL.Servicios
         private DateTime _fechaInicio;
         ///preguntar si esto esta bien
         private int _idiomaActual;
+        private bool _integridadViolada =false;
 
         private SessionManager() { }
 
@@ -80,6 +81,10 @@ namespace BLL.Servicios
             return _usuario;
         }
 
-        /// SE SACO EL EVENT
+        public bool IntegridadBaseDatos
+        {
+            get { return _integridadViolada; }
+            set { _integridadViolada = value; }
+        }
     }
 }

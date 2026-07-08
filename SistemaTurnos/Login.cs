@@ -19,12 +19,28 @@ namespace SistemaTurnosUI
         private Label lblSeleccioneIdioma;
         private AuthService authService = new AuthService();
         private IdiomaBL IdiomaBL = new IdiomaBL();
+        private DVVBL DVVBL = new DVVBL();
         public Login()
         {
             InitializeComponent();
+            EvaluarIntegridad();
             
         }
 
+        private void EvaluarIntegridad()
+        {
+            try
+            {
+                DVVBL.EvaluarInconsistencia();
+            }
+            catch(Exception ex) 
+            {
+                MessageBox.Show(ex.Message, "Falla de Integridad", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
+            }
+            
+             
+        }
 
         private void Login_Load(object sender, EventArgs e)
         {
@@ -98,6 +114,9 @@ namespace SistemaTurnosUI
 
                 case LoginResult.UsuarioNoEncontrado:
                     MessageBox.Show("Usuario o contraseña incorrectos.", "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                case LoginResult.IntegridadViolada:
+                    MessageBox.Show("Error de Integridad del Sistema" + "\r\n" + "Se ha detectado una inconsistencia en los dígitos verificadores de la base de datos (Tabla: Usuario)." + "\r\n" + "La información ha sido alterada o no coincide con los registros de control esperados (DVH/DVV)." + "\r\\n" + "Por motivos de seguridad, la operación actual ha sido bloqueada. Por favor, contacte al administrador" + "\r\n" + "para recalcular los dígitos verificadores.", "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
 
                 default:
