@@ -20,6 +20,7 @@ namespace SistemaTurnos
         List<Traduccion> listaTraducciones = new List<Traduccion>();
         List<Idioma> listaIdiomas = new List<Idioma>();
         private DataTable dtMatriz;
+        private TraduccionCaretaker _caretaker = new TraduccionCaretaker();
         public AgregarIdioma()
         {
             InitializeComponent();
@@ -90,7 +91,7 @@ namespace SistemaTurnos
             comboBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
             comboBox1.SelectedIndex = 0;
         }
-
+        /*
         private void FiltrarColumnasPorPestaña(TabPage paginaActiva)
         {
             // Obtenemos el prefijo de la pestaña activa (ej: "Adm")
@@ -123,7 +124,7 @@ namespace SistemaTurnos
 
             dataGridView1.ResumeLayout();
         }
-
+        */
         private void button1_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(textBox1.Text))
@@ -212,6 +213,8 @@ namespace SistemaTurnos
             }
         }
 
+       
+
         private void button2_Click(object sender, EventArgs e)
         {
             if (comboBox1.SelectedIndex == -1)
@@ -248,6 +251,34 @@ namespace SistemaTurnos
                 }
             }
 
+        }
+
+        private void RegistrarPuntoDeControl()
+        {
+            _caretaker.GuardarEstado(listaTraducciones);
+            btnDeshacer.Enabled = _caretaker.puedeDeshacer();
+        }
+
+        private void btnDeshacer_Click(object sender, EventArgs e)
+        {
+            if (_caretaker.puedeDeshacer())
+            {
+                listaTraducciones = _caretaker.Deshacer();
+
+                foreach (var trad in listaTraducciones)
+                {
+                    traduccionBL.Actualizar(trad);
+                }
+
+                CargarDatos();
+
+                btnDeshacer.Enabled = _caretaker.puedeDeshacer();
+            }
+        }
+
+        private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            RegistrarPuntoDeControl();
         }
     }
 }

@@ -46,6 +46,8 @@ namespace BE
                 listaPerfiles.Add(perfil);
             }
         }
+        //agregar esto para leer readonly
+        public IReadOnlyList<Perfil> listaReadonlyPerfiles => listaPerfiles;
 
 
     }

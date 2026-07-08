@@ -4,6 +4,8 @@ using DAL;
 using Seguridad;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 
 namespace BLL
 {
@@ -20,6 +22,7 @@ namespace BLL
 
         public void ActualizarUsuario(Usuario usuario)
         {
+            usuario.DVH = CalcularDVH(usuario);
             UsuarioDAL.ActualizarPorId(usuario);
         }
 
@@ -59,6 +62,7 @@ namespace BLL
                 // creo objeto con 0 intentos y false no bloqueado
                 usuario = new Usuario(username, hashedPassw, mail);
 
+                usuario.DVH= CalcularDVH(usuario);
                 // guardo en base
                 int ultimoID = UsuarioDAL.InsertarUsuario(usuario);
                 
@@ -89,17 +93,74 @@ namespace BLL
             }
            return usuario;
         }
-/*
+
+        public void EvaluarPerfilesUsuario(Usuario usuario)
+        {
+            List<Perfil> perfilesDecorados = new List<Perfil>();
+            
+            foreach (var perfilBase in usuario.listaReadonlyPerfiles) 
+            {
+                var perfilConDecorador = new DiasDeAtencion(perfilBase);
+                perfilesDecorados.Add(perfilConDecorador);
+            }
+
+            foreach (var p in perfilesDecorados)
+            {
+                if (p is PerfilDecorator dec)
+                {
+                    try
+                    {
+                        p.Contiene(p.Tag);
+                    }
+                    catch (Exception)
+                    {
+                        //esto seria lo nuevo, la novedad es que solo requiere un parametro, que es el permiso por el cual fue denegado
+                        BitacoraAdapter adapter = new BitacoraAdapter();
+                        adapter.RegistrarFallido(p.Tag);
+                        throw;
+                    }
+                  
+                    
+                }
+            }
+        }
+
         public int CalcularDVH(Usuario usuario)
         {
-            string cadenaFila = usuario.Id.ToString()
-                  + usuario.Username
-                  + usuario.Password
-                  + usuario.Mail
-                  + usuario.IntentosFallidos.ToString()
-                  + usuario.Bloqueado.ToString()
-                  + usuario.IdiomaDefault.Id.ToString();
+            string usuarioFila =
+              usuario.Id.ToString()
+            + (usuario.Username ?? "")
+            + (usuario.Password ?? "")
+            + (usuario.Mail ?? "")
+            + usuario.IntentosFallidos.ToString()
+            + usuario.Bloqueado.ToString() 
+            + (usuario.IdiomaDefault?.Id.ToString() ?? "0");
+
+            int dvh = 0;
+
+            for (int i = 0; i < usuarioFila.Length; i++)
+            {
+                // se multiplica el valor ASCII del carácter por su posición (i + 1)
+                dvh += (int)usuarioFila[i] * (i + 1);
+            }
+
+            return dvh;
+
         }
-*/
+
+        public long CalcularDVV()
+        {
+            return UsuarioDAL.CalcularDVVUsuario();
+        }
+        
+        public long UpdateDVH(int id, long dvh)
+        {
+            return UsuarioDAL.UpdateDvH(id, dvh);
+        }
+       
+       
+
+ 
+
     }
 }

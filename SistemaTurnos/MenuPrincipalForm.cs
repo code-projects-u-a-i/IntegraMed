@@ -21,7 +21,8 @@ namespace SistemaTurnos
     {
 
         private AuthService authService = new AuthService();
-
+        private UsuarioBL usuarioBL = new UsuarioBL();
+        private DVVBL dVVBL = new DVVBL();
         public MenuPrincipalForm( )
         {
             InitializeComponent();
@@ -34,9 +35,22 @@ namespace SistemaTurnos
 
         private void CargarPermisosUser()
         {
+            Usuario usuario= SessionManager.getInstance().ObtenerUsuario();
+
+            try
+            {
+                usuarioBL.EvaluarPerfilesUsuario(SessionManager.getInstance().ObtenerUsuario());
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message, "Sera desconectado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             if (this.menuStrip1 != null)
             {
-                EvaluarPermisosMenu(this.menuStrip1.Items, SessionManager.getInstance().ObtenerUsuario());
+                EvaluarPermisosMenu(this.menuStrip1.Items, usuario);
             }
         }
 
@@ -92,12 +106,45 @@ namespace SistemaTurnos
             this.menuStrip1.Padding = new Padding(6, 6, 6, 6);
             this.menuStrip1.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
             IdiomaService.CambiarIdioma(SessionManager.getInstance().IdiomaActual);
+            EvaluarInconsistencia();
+        }
+
+        private bool EvaluarInconsistencia()
+        {
+            // si es admin y hay inconsistencia
+            if(SessionManager.getInstance().ObtenerUsuario().listaReadonlyPerfiles.Any(x=> x.Tag.Equals("ADMIN_FULL")) && SessionManager.getInstance().IntegridadBaseDatos)
+            {
+                DialogResult resultado = MessageBox.Show(
+                "Error de Integridad del Sistema" + "\r\n" + "Se ha detectado una inconsistencia en los dígitos verificadores de la base de datos (Tabla: Usuario). Debe subsanarla para continuar", 
+                    "Inconsistencia de Datos",                                                              
+                    MessageBoxButtons.YesNo,                                                            
+                    MessageBoxIcon.Warning                                                                 
+                    );
+
+                if (resultado == DialogResult.Yes)
+                {
+                    dVVBL.RestaurarIntegridad();
+                    MessageBox.Show("Se restauro la integridad exitosamente");
+                    return true; 
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!EvaluarInconsistencia())
+            {
+                MessageBox.Show("Debe corregir el error de integridad para que otros usuarios puedan utilizar la aplicacion", "Desconectarse", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             try
             {
+                
                 authService.Logout();
                 MessageBox.Show("Se desconecto exitosamente", "Desconectado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Hide();
@@ -113,22 +160,20 @@ namespace SistemaTurnos
 
         private void bitacoraToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            BitacoraForm bitacoraForm = new BitacoraForm();
-            bitacoraForm.MdiParent = this;
-            bitacoraForm.Show();
+            BitacoraFormFactory fabrica = new BitacoraFormFactory();
+            fabrica.Abrir(this);
         }
 
         private void cambiarClaveToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            CambiarClaveForm cambiarClave = new CambiarClaveForm();
-            cambiarClave.MdiParent = this;
-            cambiarClave.Show();
+            CambiarClaveFormFactory cambiarClave = new CambiarClaveFormFactory();
+            cambiarClave.Abrir(this);
         }
 
         private void seleccionarIdiomaToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            IdiomaForm idiomaForm = new IdiomaForm();
-            idiomaForm.Show();
+            IdiomaFormFactory idiomaForm = new IdiomaFormFactory();
+            idiomaForm.Abrir(this);
         }
 
         private void desbloqueoDeUsuarioToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -138,14 +183,13 @@ namespace SistemaTurnos
 
         private void restaurarIntegridadToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Pronto", "Pronto", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            EvaluarInconsistencia();
         }
 
         private void crearUsuariosToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            RegistrarseForm menu = new RegistrarseForm();
-            menu.MdiParent = this;
-            menu.Show();
+            RegistrarseFormFactory menu = new RegistrarseFormFactory();
+            menu.Abrir(this);
         }
 
         private void restaurarMailAnteriorToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -155,30 +199,26 @@ namespace SistemaTurnos
 
         private void gestionarPerfilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AdministrarPerfilesForm eliminarPerfiles = new AdministrarPerfilesForm();
-            eliminarPerfiles.MdiParent = this;
-            eliminarPerfiles.Show();
+            AdministrarPerfilesFormFactory eliminarPerfiles = new AdministrarPerfilesFormFactory();
+            eliminarPerfiles.Abrir(this);
         }
 
         private void asignarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GestionPerfilForm perfilForm = new GestionPerfilForm();
-            perfilForm.MdiParent = this;
-            perfilForm.Show();
+            GestionPerfilFormFactory perfilForm = new GestionPerfilFormFactory();
+            perfilForm.Abrir(this);
         }
 
         private void asignarPerfilesAUsuarioToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AsignarPerfilesUsuarioForm perfilForm = new AsignarPerfilesUsuarioForm();
-            perfilForm.MdiParent = this;
-            perfilForm.Show();
+            AsignarPerfilesUsuarioFormFactory perfilForm = new AsignarPerfilesUsuarioFormFactory();
+            perfilForm.Abrir(this);
         }
 
         private void gestionarIdiomaToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AgregarIdioma perfilForm = new AgregarIdioma();
-            perfilForm.MdiParent = this;
-            perfilForm.Show();
+            AgregarIdiomaFormFactory perfilForm = new AgregarIdiomaFormFactory();
+            perfilForm.Abrir(this);
         }
 
         private void modificarMailToolStripMenuItem_Click(object sender, EventArgs e)

@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitacoraDAL.cs" />
+    <Compile Include="DVVDAL.cs" />
     <Compile Include="IdiomaDAL.cs" />
     <Compile Include="PerfilDAL.cs" />
     <Compile Include="TraduccionDAL.cs" />
@@ -55,10 +56,6 @@
       <Project>{5e1884f7-eb29-4641-b9b9-d1cc6a95695a}</Project>
       <Name>BE</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="inserts.sql" />
-    <Content Include="scriptBaseDeDatos.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
