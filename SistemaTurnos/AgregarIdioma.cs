@@ -20,7 +20,6 @@ namespace SistemaTurnos
         List<Traduccion> listaTraducciones = new List<Traduccion>();
         List<Idioma> listaIdiomas = new List<Idioma>();
         private DataTable dtMatriz;
-        private TraduccionCaretaker _caretaker = new TraduccionCaretaker();
         public AgregarIdioma()
         {
             InitializeComponent();
@@ -251,34 +250,6 @@ namespace SistemaTurnos
                 }
             }
 
-        }
-
-        private void RegistrarPuntoDeControl()
-        {
-            _caretaker.GuardarEstado(listaTraducciones);
-            btnDeshacer.Enabled = _caretaker.puedeDeshacer();
-        }
-
-        private void btnDeshacer_Click(object sender, EventArgs e)
-        {
-            if (_caretaker.puedeDeshacer())
-            {
-                listaTraducciones = _caretaker.Deshacer();
-
-                foreach (var trad in listaTraducciones)
-                {
-                    traduccionBL.Actualizar(trad);
-                }
-
-                CargarDatos();
-
-                btnDeshacer.Enabled = _caretaker.puedeDeshacer();
-            }
-        }
-
-        private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
-        {
-            RegistrarPuntoDeControl();
         }
     }
 }

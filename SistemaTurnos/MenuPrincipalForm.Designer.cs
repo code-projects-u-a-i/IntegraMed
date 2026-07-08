@@ -1,4 +1,6 @@
-﻿namespace SistemaTurnos
+﻿using System;
+
+namespace SistemaTurnos
 {
     partial class MenuPrincipalForm
     {
@@ -229,6 +231,16 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void restaurarMailAnteriorToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void modificarMailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

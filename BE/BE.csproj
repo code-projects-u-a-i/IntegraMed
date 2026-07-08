@@ -42,14 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bitacora.cs" />
-    <Compile Include="DiasDeAtencion.cs" />
     <Compile Include="DVV.cs" />
     <Compile Include="Idioma.cs" />
-    <Compile Include="TraduccionMemento.cs" />
     <Compile Include="Perfil.cs" />
     <Compile Include="Familia.cs" />
     <Compile Include="Patente.cs" />
-    <Compile Include="PerfilDecorator.cs" />
     <Compile Include="Traduccion.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

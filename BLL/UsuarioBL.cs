@@ -93,38 +93,6 @@ namespace BLL
             }
            return usuario;
         }
-
-        public void EvaluarPerfilesUsuario(Usuario usuario)
-        {
-            List<Perfil> perfilesDecorados = new List<Perfil>();
-            
-            foreach (var perfilBase in usuario.listaReadonlyPerfiles) 
-            {
-                var perfilConDecorador = new DiasDeAtencion(perfilBase);
-                perfilesDecorados.Add(perfilConDecorador);
-            }
-
-            foreach (var p in perfilesDecorados)
-            {
-                if (p is PerfilDecorator dec)
-                {
-                    try
-                    {
-                        p.Contiene(p.Tag);
-                    }
-                    catch (Exception)
-                    {
-                        //esto seria lo nuevo, la novedad es que solo requiere un parametro, que es el permiso por el cual fue denegado
-                        BitacoraAdapter adapter = new BitacoraAdapter();
-                        adapter.RegistrarFallido(p.Tag);
-                        throw;
-                    }
-                  
-                    
-                }
-            }
-        }
-
         public int CalcularDVH(Usuario usuario)
         {
             string usuarioFila =

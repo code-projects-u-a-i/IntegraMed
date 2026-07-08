@@ -88,7 +88,6 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(1426, 267);
             this.dataGridView1.TabIndex = 6;
-            this.dataGridView1.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_CellBeginEdit);
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             // 
             // groupBox2
@@ -129,16 +128,6 @@
             this.button2.Text = "Eliminar Idioma";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // btnDeshacer
-            // 
-            this.btnDeshacer.Location = new System.Drawing.Point(1259, 472);
-            this.btnDeshacer.Name = "btnDeshacer";
-            this.btnDeshacer.Size = new System.Drawing.Size(152, 23);
-            this.btnDeshacer.TabIndex = 7;
-            this.btnDeshacer.Text = "Deshacer";
-            this.btnDeshacer.UseVisualStyleBackColor = true;
-            this.btnDeshacer.Click += new System.EventHandler(this.btnDeshacer_Click);
             // 
             // AgregarIdioma
             // 

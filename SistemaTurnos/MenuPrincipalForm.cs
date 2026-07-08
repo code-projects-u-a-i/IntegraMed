@@ -36,18 +36,6 @@ namespace SistemaTurnos
         private void CargarPermisosUser()
         {
             Usuario usuario= SessionManager.getInstance().ObtenerUsuario();
-
-            try
-            {
-                usuarioBL.EvaluarPerfilesUsuario(SessionManager.getInstance().ObtenerUsuario());
-            }
-            catch (Exception ex)
-            {
-
-                MessageBox.Show(ex.Message, "Sera desconectado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
             if (this.menuStrip1 != null)
             {
                 EvaluarPermisosMenu(this.menuStrip1.Items, usuario);
@@ -160,21 +148,24 @@ namespace SistemaTurnos
 
         private void bitacoraToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            BitacoraFormFactory fabrica = new BitacoraFormFactory();
-            fabrica.Abrir(this);
+            BitacoraForm bitacoraForm = new BitacoraForm();
+            bitacoraForm.MdiParent = this;
+            bitacoraForm.Show();
         }
 
         private void cambiarClaveToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            CambiarClaveFormFactory cambiarClave = new CambiarClaveFormFactory();
-            cambiarClave.Abrir(this);
+            CambiarClaveForm cambiarClave = new CambiarClaveForm();
+            cambiarClave.MdiParent = this;
+            cambiarClave.Show();
         }
 
         private void seleccionarIdiomaToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            IdiomaFormFactory idiomaForm = new IdiomaFormFactory();
-            idiomaForm.Abrir(this);
+            IdiomaForm idiomaForm = new IdiomaForm();
+            idiomaForm.Show();
         }
+
 
         private void desbloqueoDeUsuarioToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -188,42 +179,37 @@ namespace SistemaTurnos
 
         private void crearUsuariosToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            RegistrarseFormFactory menu = new RegistrarseFormFactory();
-            menu.Abrir(this);
-        }
-
-        private void restaurarMailAnteriorToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Pronto", "Pronto", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            RegistrarseForm menu = new RegistrarseForm();
+            menu.MdiParent = this;
+            menu.Show();
         }
 
         private void gestionarPerfilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AdministrarPerfilesFormFactory eliminarPerfiles = new AdministrarPerfilesFormFactory();
-            eliminarPerfiles.Abrir(this);
+            AdministrarPerfilesForm eliminarPerfiles = new AdministrarPerfilesForm();
+            eliminarPerfiles.MdiParent = this;
+            eliminarPerfiles.Show();
         }
 
         private void asignarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GestionPerfilFormFactory perfilForm = new GestionPerfilFormFactory();
-            perfilForm.Abrir(this);
+            GestionPerfilForm perfilForm = new GestionPerfilForm();
+            perfilForm.MdiParent = this;
+            perfilForm.Show();
         }
 
         private void asignarPerfilesAUsuarioToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AsignarPerfilesUsuarioFormFactory perfilForm = new AsignarPerfilesUsuarioFormFactory();
-            perfilForm.Abrir(this);
+            AsignarPerfilesUsuarioForm perfilForm = new AsignarPerfilesUsuarioForm();
+            perfilForm.MdiParent = this;
+            perfilForm.Show();
         }
 
         private void gestionarIdiomaToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AgregarIdiomaFormFactory perfilForm = new AgregarIdiomaFormFactory();
-            perfilForm.Abrir(this);
-        }
-
-        private void modificarMailToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Pronto", "Pronto", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            AgregarIdioma perfilForm = new AgregarIdioma();
+            perfilForm.MdiParent = this;
+            perfilForm.Show();
         }
         #endregion
 

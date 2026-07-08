@@ -76,7 +76,6 @@
     <Compile Include="AdministrarPerfilesForm.Designer.cs">
       <DependentUpon>AdministrarPerfilesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormFactory.cs" />
     <Compile Include="IdiomaForm.cs">
       <SubType>Form</SubType>
     </Compile>
