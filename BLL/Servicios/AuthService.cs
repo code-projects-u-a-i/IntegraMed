@@ -115,7 +115,7 @@ namespace BLL.Servicios
 
         private bool coincidePassw(string passwordIngresada, CryptoManager _crypto, string password)
         {
-            string hashIngresado = _crypto.HashMD5(passwordIngresada);
+            string hashIngresado = _crypto.GenerarHashSHA256(passwordIngresada); // cambio!!
             return string.Equals(password, hashIngresado, StringComparison.OrdinalIgnoreCase);
         }
 

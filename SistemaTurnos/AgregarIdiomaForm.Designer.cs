@@ -1,6 +1,6 @@
 ﻿namespace SistemaTurnos
 {
-    partial class AgregarIdioma
+    partial class AgregarIdiomaForm
     {
         /// <summary>
         /// Required designer variable.
@@ -37,7 +37,6 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
-            this.btnDeshacer = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -50,6 +49,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 13);
             this.label1.TabIndex = 2;
+            this.label1.Tag = "AINombre";
             this.label1.Text = "Nombre";
             // 
             // textBox1
@@ -65,6 +65,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(195, 23);
             this.button1.TabIndex = 4;
+            this.button1.Tag = "AIAgregarIdioma";
             this.button1.Text = "Agregar Idioma";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -79,6 +80,7 @@
             this.groupBox1.Size = new System.Drawing.Size(538, 100);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
+            this.groupBox1.Tag = "AINuevoIdioma";
             this.groupBox1.Text = "Nuevo Idioma";
             // 
             // dataGridView1
@@ -100,6 +102,7 @@
             this.groupBox2.Size = new System.Drawing.Size(538, 100);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
+            this.groupBox2.Tag = "AIEliminarIdioma";
             this.groupBox2.Text = "Eliminar Idioma";
             // 
             // comboBox1
@@ -117,6 +120,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(38, 13);
             this.label2.TabIndex = 2;
+            this.label2.Tag = "AIEliminarNombre";
             this.label2.Text = "Idioma";
             // 
             // button2
@@ -125,6 +129,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(195, 23);
             this.button2.TabIndex = 4;
+            this.button2.Tag = "AIEliminar";
             this.button2.Text = "Eliminar Idioma";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -134,11 +139,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1439, 544);
-            this.Controls.Add(this.btnDeshacer);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.groupBox1);
             this.Name = "AgregarIdioma";
+            this.Tag = "AIForm";
             this.Text = "AgregarIdioma";
             this.Load += new System.EventHandler(this.AgregarIdioma_Load);
             this.groupBox1.ResumeLayout(false);
@@ -160,6 +165,5 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button btnDeshacer;
     }
 }

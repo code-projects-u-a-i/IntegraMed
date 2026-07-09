@@ -9,16 +9,18 @@ namespace Seguridad
 {
     public class CryptoManager 
     {
-        public string HashMD5(string textoPlano)
+        public string GenerarHashSHA256(string textoPlano) // nuevo algoritmo! cambio!
         {
-            using (MD5 md5 = MD5.Create())
+            using (SHA256 sha256 = SHA256.Create())
             {
                 byte[] inputBytes = Encoding.UTF8.GetBytes(textoPlano);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
+                byte[] hashBytes = sha256.ComputeHash(inputBytes);
 
                 var sb = new StringBuilder();
                 for (int i = 0; i < hashBytes.Length; i++)
-                    sb.Append(hashBytes[i].ToString("x2"));
+                {
+                    sb.Append(hashBytes[i].ToString("x2")); 
+                }
 
                 return sb.ToString();
             }

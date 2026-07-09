@@ -10,7 +10,7 @@ namespace DAL
     public class UsuarioDAL
     {
 
-        public static int InsertarUsuario(Usuario nuevoUsuario)
+        public static int InsertarUsuario(Usuario nuevoUsuario) 
         {
             var dao = new DAO();
 
@@ -31,7 +31,7 @@ namespace DAL
                 Usuario_IntentosFallidos,
                 Usuario_Bloqueado,
                 Usuario_IdiomaDefault,
-                DVH
+                DVH 
             )
             VALUES (
                 N'{userEsc}',
@@ -54,7 +54,7 @@ namespace DAL
 
             return 0; 
         }
-        // ver si puede borrarse
+      
         public static Usuario ObtenerPorId(int id)
         {
             var dao = new DAO();
@@ -157,7 +157,7 @@ ORDER BY Usuario_ID;
             return lista;
         }
 
-        public static long CalcularDVVUsuario()
+        public static long CalcularDVVUsuario() // cambio! nuevo metodo
         {
 
             var dao = new DAO();
@@ -169,7 +169,7 @@ ORDER BY Usuario_ID;
             return Convert.ToInt64(resultado);
         }
 
-        public static long UpdateDvH(int id, long suma)
+        public static long UpdateDvH(int id, long suma) // cambio! nuevo metodo
         {
 
             var dao = new DAO();
@@ -183,7 +183,7 @@ ORDER BY Usuario_ID;
         }
 
 
-        private static Usuario MapUsuario(DataRow dr) // cambio
+        private static Usuario MapUsuario(DataRow dr) 
         {
             return new Usuario
             {

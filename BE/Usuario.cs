@@ -11,14 +11,13 @@ namespace BE
         public int IntentosFallidos { get; set; }
         public bool Bloqueado { get; set; }
         public Idioma IdiomaDefault { get; set; }
-
-        public int DVH;
+        public int DVH { get; set; } //cambio!!
 
         private readonly List<Perfil> listaPerfiles = new List<Perfil>();
 
         public Usuario() { }
-
-        public Usuario( string username, string password, string mail) // hay que agregar el dvh
+        // nuevo usuario
+        public Usuario( string username, string password, string mail) 
         {
             Username = username;
             Password = password;
@@ -46,7 +45,7 @@ namespace BE
                 listaPerfiles.Add(perfil);
             }
         }
-        //agregar esto para leer readonly
+        //agregar esto para leer readonly CAMBIO!!
         public IReadOnlyList<Perfil> listaReadonlyPerfiles => listaPerfiles;
 
 

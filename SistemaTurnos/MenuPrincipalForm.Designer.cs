@@ -82,7 +82,7 @@ namespace SistemaTurnos
             // modificarMailToolStripMenuItem
             // 
             this.modificarMailToolStripMenuItem.Name = "modificarMailToolStripMenuItem";
-            this.modificarMailToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.modificarMailToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.modificarMailToolStripMenuItem.Tag = "MODIFICAR_MAIL";
             this.modificarMailToolStripMenuItem.Text = "Modificar Mail";
             this.modificarMailToolStripMenuItem.Click += new System.EventHandler(this.modificarMailToolStripMenuItem_Click);
@@ -90,7 +90,7 @@ namespace SistemaTurnos
             // cambiarClaveToolStripMenuItem
             // 
             this.cambiarClaveToolStripMenuItem.Name = "cambiarClaveToolStripMenuItem";
-            this.cambiarClaveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cambiarClaveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.cambiarClaveToolStripMenuItem.Tag = "MODIFICAR_CLAVE";
             this.cambiarClaveToolStripMenuItem.Text = "Cambiar Clave";
             this.cambiarClaveToolStripMenuItem.Click += new System.EventHandler(this.cambiarClaveToolStripMenuItem_Click_1);
@@ -225,6 +225,7 @@ namespace SistemaTurnos
             this.Name = "MenuPrincipalForm";
             this.Tag = "MenuForm";
             this.Text = "MenuForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MenuPrincipalForm_FormClosing);
             this.Load += new System.EventHandler(this.MenuForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -233,16 +234,7 @@ namespace SistemaTurnos
 
         }
 
-        private void restaurarMailAnteriorToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void modificarMailToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
+      
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;

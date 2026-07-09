@@ -98,7 +98,6 @@ namespace SistemaTurnosUI
                     MenuPrincipalForm menuForm = new MenuPrincipalForm();
                     menuForm.ShowDialog();
                     this.Close();
-
                     break;
 
                 case LoginResult.CredencialesInvalidas:

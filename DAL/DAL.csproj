@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="BitacoraDAL.cs" />
     <Compile Include="DVVDAL.cs" />
+    <Compile Include="HistorialDAL.cs" />
     <Compile Include="IdiomaDAL.cs" />
     <Compile Include="PerfilDAL.cs" />
     <Compile Include="TraduccionDAL.cs" />

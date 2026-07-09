@@ -1,6 +1,7 @@
 ﻿using BE;
 using BLL;
 using BLL.Servicios;
+using Seguridad;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,16 +14,21 @@ using System.Windows.Forms;
 
 namespace SistemaTurnos
 {
-    public partial class AgregarIdioma : Form
+    public partial class AgregarIdiomaForm : Form,IIdiomaObserver
     {
         TraduccionBL traduccionBL =new TraduccionBL();
         IdiomaBL idiomaBL = new IdiomaBL();
         List<Traduccion> listaTraducciones = new List<Traduccion>();
         List<Idioma> listaIdiomas = new List<Idioma>();
         private DataTable dtMatriz;
-        public AgregarIdioma()
+        public AgregarIdiomaForm()
         {
             InitializeComponent();
+            IdiomaService.Suscribir(this);
+            if (IdiomaService.TraduccionesActuales != null)
+            {
+                this.UpdateIdioma(IdiomaService.TraduccionesActuales);
+            }
         }
 
         private void AgregarIdioma_Load(object sender, EventArgs e)
@@ -250,6 +256,32 @@ namespace SistemaTurnos
                 }
             }
 
+        }
+
+        public void UpdateIdioma(Dictionary<string, string> traducciones)
+        {
+            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
+            {
+                this.Text = traducciones[this.Tag.ToString()];
+            }
+
+            TraducirControlesRecursivo(this, traducciones);
+        }
+
+        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
+                {
+                    c.Text = traducciones[c.Tag.ToString()];
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControlesRecursivo(c, traducciones);
+                }
+            }
         }
     }
 }

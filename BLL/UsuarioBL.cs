@@ -31,14 +31,14 @@ namespace BLL
            
             // hasheo para ver si concide
             CryptoManager crypto = new CryptoManager();
-            string passViejaHashed = crypto.HashMD5(passVieja);
+            string passViejaHashed = crypto.GenerarHashSHA256(passVieja); // CAMBIO!! ahora llama 256
             
             Usuario usuario = ObtenerPorNombre(SessionManager.getInstance().ObtenerUsuario().Username);
      
             // coincide -- hasheo la nueva
             if (string.Equals(usuario.Password, passViejaHashed, StringComparison.OrdinalIgnoreCase))
             {
-                usuario.Password = crypto.HashMD5(passVieja);
+                usuario.Password = crypto.GenerarHashSHA256(passVieja); // igual!
                 ActualizarUsuario(usuario);
                 BitacoraBL bitacora = new BitacoraBL();
                 bitacora.IngresarBitacora(usuario.Id, usuario.Username, "ActualizarContraseña", "Contraseña actualizada", "", SeveridadLog.Info);
@@ -57,7 +57,7 @@ namespace BLL
             {
                 // hashear contraseña
                 CryptoManager  crypto = new CryptoManager();
-                string hashedPassw =crypto.HashMD5(password);
+                string hashedPassw =crypto.GenerarHashSHA256(password); // cambio!
                 
                 // creo objeto con 0 intentos y false no bloqueado
                 usuario = new Usuario(username, hashedPassw, mail);
@@ -65,6 +65,10 @@ namespace BLL
                 usuario.DVH= CalcularDVH(usuario);
                 // guardo en base
                 int ultimoID = UsuarioDAL.InsertarUsuario(usuario);
+
+                //creo una entrada en Historial con el mail que acaba de ingresar // CAMBIO!! ahora cuando hay un nuevo usuario tiene que actualizar el historial de cambios
+                HistorialBL historialBL = new HistorialBL(); 
+                historialBL.Insertar(usuario.Mail);
                 
                 // bitacora
                 BitacoraBL bitacora = new BitacoraBL();
@@ -93,7 +97,7 @@ namespace BLL
             }
            return usuario;
         }
-        public int CalcularDVH(Usuario usuario)
+        public int CalcularDVH(Usuario usuario) // cambio!! dvh
         {
             string usuarioFila =
               usuario.Id.ToString()
@@ -116,12 +120,28 @@ namespace BLL
 
         }
 
-        public long CalcularDVV()
+        public void CambiarMailHistorialCambios(int id, string mail) // cambio!
+        {
+            Usuario usuario = ObtenerPorId(id);
+            usuario.Mail = mail;
+
+            ActualizarUsuario(usuario);
+
+            BitacoraBL bitacora = new BitacoraBL();
+            bitacora.IngresarBitacora(usuario.Id, usuario.Username, "Se modifico el mail", "operacion exitosa", "", SeveridadLog.Info);
+        }
+
+        private Usuario ObtenerPorId(int id) // cambio!!
+        {
+            return UsuarioDAL.ObtenerPorId(id);
+        }
+
+        public long CalcularDVV() // cambio!! dvv
         {
             return UsuarioDAL.CalcularDVVUsuario();
         }
         
-        public long UpdateDVH(int id, long dvh)
+        public long UpdateDVH(int id, long dvh) // dvh
         {
             return UsuarioDAL.UpdateDvH(id, dvh);
         }

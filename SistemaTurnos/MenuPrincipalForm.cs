@@ -100,7 +100,7 @@ namespace SistemaTurnos
         private bool EvaluarInconsistencia()
         {
             // si es admin y hay inconsistencia
-            if(SessionManager.getInstance().ObtenerUsuario().listaReadonlyPerfiles.Any(x=> x.Tag.Equals("ADMIN_FULL")) && SessionManager.getInstance().IntegridadBaseDatos)
+            if(SessionManager.getInstance().ObtenerUsuario() !=null && SessionManager.getInstance().ObtenerUsuario().listaReadonlyPerfiles.Any(x=> x.Tag.Equals("ADMIN_FULL")) && SessionManager.getInstance().IntegridadBaseDatos)
             {
                 DialogResult resultado = MessageBox.Show(
                 "Error de Integridad del Sistema" + "\r\n" + "Se ha detectado una inconsistencia en los dígitos verificadores de la base de datos (Tabla: Usuario). Debe subsanarla para continuar", 
@@ -125,6 +125,12 @@ namespace SistemaTurnos
 
         private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            CerrarFormulario();
+            
+        }
+
+        private void CerrarFormulario()
+        {
             if (!EvaluarInconsistencia())
             {
                 MessageBox.Show("Debe corregir el error de integridad para que otros usuarios puedan utilizar la aplicacion", "Desconectarse", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -132,7 +138,7 @@ namespace SistemaTurnos
             }
             try
             {
-                
+
                 authService.Logout();
                 MessageBox.Show("Se desconecto exitosamente", "Desconectado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Hide();
@@ -207,10 +213,34 @@ namespace SistemaTurnos
 
         private void gestionarIdiomaToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AgregarIdioma perfilForm = new AgregarIdioma();
+            AgregarIdiomaForm perfilForm = new AgregarIdiomaForm();
             perfilForm.MdiParent = this;
             perfilForm.Show();
         }
+
+        private void restaurarMailAnteriorToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            HistorialCambiosForm histForm = new HistorialCambiosForm();
+            histForm.MdiParent = this;
+            histForm.Show();
+        }
+
+        private void modificarMailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ModificarMailForm modificarMail = new ModificarMailForm();
+            modificarMail.MdiParent = this;
+            modificarMail.Show();
+        }
+
+        private void MenuPrincipalForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (this.ContainsFocus) // importante, si no pongo esto se ejecuta siempre que se cierra un formulario
+            {
+                CerrarFormulario();
+            }
+         
+        }
+
         #endregion
 
         #region Implementación del Patrón Observer (IIdiomaObserver)
@@ -267,5 +297,7 @@ namespace SistemaTurnos
         {
 
         }
+
+       
     }
 }

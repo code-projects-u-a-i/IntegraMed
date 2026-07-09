@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Bitacora.cs" />
     <Compile Include="DVV.cs" />
+    <Compile Include="Historial.cs" />
     <Compile Include="Idioma.cs" />
     <Compile Include="Perfil.cs" />
     <Compile Include="Familia.cs" />
