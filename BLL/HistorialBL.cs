@@ -16,9 +16,9 @@ namespace BLL
             return HistorialDAL.ObtenerPorUsuario(usuarioId);
         }
 
-        public void Insertar(string mail, int id=0)
+        public void Insertar(string mail, int id=0) /// si viene sin id porque quiere modificar su mail, debe actualizar el usuario y el historial. Si el admin crea un usuario tiene que usar el id del insert
         {
-            // si es un usuario ya existente debo actualizar el usuario
+            // si es un usuario que ya existe cree debo actualizar el usuario conectado (porque es el que quiere modificar su mail)
             if (id == 0)
             {
                 Usuario usuario = SessionManager.getInstance().ObtenerUsuario();
@@ -31,13 +31,10 @@ namespace BLL
 
                 BitacoraBL bitacoraBL = new BitacoraBL();
                 bitacoraBL.IngresarBitacora(usuario.Id, usuario.Username, "Se actualiza el mail", "Exitoso", "", SeveridadLog.Info);
+                id = usuario.Id;
             }
 
-            // si es un usuario tengo que ademas ingresar en historial el mail
-            if (id != 0)
-            {
-                id = SessionManager.getInstance().ObtenerUsuario().Id;
-            }
+            // si es un usuario recien creado solo hay ingresar en historial el mail
             
             Historial historial = new Historial(id, mail, DateTime.Now);
             HistorialDAL.Insertar(historial);

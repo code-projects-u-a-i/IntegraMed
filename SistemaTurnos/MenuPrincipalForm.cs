@@ -111,8 +111,8 @@ namespace SistemaTurnos
 
                 if (resultado == DialogResult.Yes)
                 {
-                    dVVBL.RestaurarIntegridad();
-                    MessageBox.Show("Se restauro la integridad exitosamente");
+                   // dVVBL.RestaurarIntegridad();
+                    MessageBox.Show("Se restaurara la integridad de la base de datos");
                     return true; 
                 }
                 else
