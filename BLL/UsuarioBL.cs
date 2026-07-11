@@ -68,7 +68,7 @@ namespace BLL
 
                 //creo una entrada en Historial con el mail que acaba de ingresar // CAMBIO!! ahora cuando hay un nuevo usuario tiene que actualizar el historial de cambios
                 HistorialBL historialBL = new HistorialBL(); 
-                historialBL.Insertar(usuario.Mail);
+                historialBL.Insertar(usuario.Mail, ultimoID);
                 
                 // bitacora
                 BitacoraBL bitacora = new BitacoraBL();
