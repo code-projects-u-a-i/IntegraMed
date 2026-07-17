@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="scriptBD.sql" />
+    <Content Include="storeProcedures.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

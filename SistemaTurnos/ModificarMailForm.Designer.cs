@@ -59,10 +59,10 @@
             this.lblMail.AutoSize = true;
             this.lblMail.Location = new System.Drawing.Point(55, 94);
             this.lblMail.Name = "lblMail";
-            this.lblMail.Size = new System.Drawing.Size(36, 13);
+            this.lblMail.Size = new System.Drawing.Size(126, 13);
             this.lblMail.TabIndex = 2;
             this.lblMail.Tag = "ModMailMail";
-            this.lblMail.Text = "lblMail";
+            this.lblMail.Text = "Correo electronico nuevo";
             // 
             // txtMail
             // 
@@ -97,6 +97,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(511, 250);
             this.Controls.Add(this.btnVolver);
             this.Controls.Add(this.btnCambiar);
@@ -104,6 +105,7 @@
             this.Controls.Add(this.lblMail);
             this.Controls.Add(this.txtNombre);
             this.Controls.Add(this.lblNombre);
+            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Name = "ModificarMailForm";
             this.Tag = "ModMailForm";
             this.Text = "ModificarMail";

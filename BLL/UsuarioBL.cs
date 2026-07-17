@@ -31,14 +31,14 @@ namespace BLL
            
             // hasheo para ver si concide
             CryptoManager crypto = new CryptoManager();
-            string passViejaHashed = crypto.GenerarHashSHA256(passVieja); // CAMBIO!! ahora llama 256
+            string passViejaHashed = crypto.GenerarHashMD5(passVieja); // CAMBIO!! ahora llama 256
             
             Usuario usuario = ObtenerPorNombre(SessionManager.getInstance().ObtenerUsuario().Username);
      
             // coincide -- hasheo la nueva
             if (string.Equals(usuario.Password, passViejaHashed, StringComparison.OrdinalIgnoreCase))
             {
-                usuario.Password = crypto.GenerarHashSHA256(passVieja); // igual!
+                usuario.Password = crypto.GenerarHashMD5(passVieja); // igual!
                 ActualizarUsuario(usuario);
                 BitacoraBL bitacora = new BitacoraBL();
                 bitacora.IngresarBitacora(usuario.Id, usuario.Username, "ActualizarContraseña", "Contraseña actualizada", "", SeveridadLog.Info);
@@ -57,7 +57,7 @@ namespace BLL
             {
                 // hashear contraseña
                 CryptoManager  crypto = new CryptoManager();
-                string hashedPassw =crypto.GenerarHashSHA256(password); // cambio!
+                string hashedPassw =crypto.GenerarHashMD5(password); // cambio!
                 
                 // creo objeto con 0 intentos y false no bloqueado
                 usuario = new Usuario(username, hashedPassw, mail);

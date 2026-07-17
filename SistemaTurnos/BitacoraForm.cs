@@ -13,14 +13,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SistemaTurnos
-{/// <summary>
-/// este form muestra la bitacora y tiene filtros de severidad, tal vez se podrian agregar mas filtros
-/// </summary>
+{
+    /// <summary>
+    /// Formulario de auditoría que permite visualizar la bitácora con filtros combinados
+    /// de Severidad y Nombre de Usuario.
+    /// </summary>
     public partial class BitacoraForm : Form, IIdiomaObserver
     {
-
         private BitacoraBL bitacoraBL = new BitacoraBL();
         private List<Bitacora> DatosListado { get; set; }
+
         public BitacoraForm()
         {
             InitializeComponent();
@@ -28,16 +30,22 @@ namespace SistemaTurnos
 
         private void BitacoraForm_Load(object sender, EventArgs e)
         {
-            cmbFiltro = FiltroSeveridad();
             CargarDatos();
+
+            cmbFiltro = ConfigurarFiltroSeveridad();
+            comboBox1 = ConfigurarFiltroUsername();
+
             ConfigurarGrid();
+
             IdiomaService.Suscribir(this);
             if (IdiomaService.TraduccionesActuales != null)
             {
                 this.UpdateIdioma(IdiomaService.TraduccionesActuales);
             }
         }
-        #region Carga y Filtrado de Datos
+
+        #region Carga y Inicialización de Filtros
+
         public void CargarDatos()
         {
             try
@@ -53,54 +61,64 @@ namespace SistemaTurnos
             }
         }
 
-        private ComboBox FiltroSeveridad()
-        {      
+        /// <summary>
+        /// Configura el ComboBox de filtrado por severidad del log.
+        /// </summary>
+        private ComboBox ConfigurarFiltroSeveridad()
+        {
             cmbFiltro.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbFiltro.Font= new System.Drawing.Font("Segoe UI", 9F);
-               
+            cmbFiltro.Font = new System.Drawing.Font("Segoe UI", 9F);
 
+            cmbFiltro.Items.Clear();
             cmbFiltro.Items.Add("Todos");
             foreach (var name in Enum.GetNames(typeof(SeveridadLog)))
             {
-               cmbFiltro.Items.Add(name);
+                cmbFiltro.Items.Add(name);
             }
             cmbFiltro.SelectedIndex = 0;
 
             cmbFiltro.SelectedIndexChanged += (sender, e) => ConfigurarGrid();
-            
+
             return cmbFiltro;
         }
-        #endregion
 
-        #region Implementación del Patrón Observer (IIdiomaObserver)
-        public void UpdateIdioma(Dictionary<string, string> traducciones)
+        /// <summary>
+        /// Configura el ComboBox (comboBox1) para filtrar dinámicamente por usuario.
+        /// Extrae los usernames únicos presentes en la lista de logs cargada.
+        /// </summary>
+        private ComboBox ConfigurarFiltroUsername()
         {
-            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
+
+            comboBox1.Items.Clear();
+            comboBox1.Items.Add("Todos");
+
+            if (DatosListado != null && DatosListado.Count > 0)
             {
-                this.Text = traducciones[this.Tag.ToString()];
+                var usernamesUnicos = DatosListado
+                    .Where(x => !string.IsNullOrEmpty(x.Usuario_Username))
+                    .Select(x => x.Usuario_Username)
+                    .Distinct()
+                    .OrderBy(name => name);
+
+                foreach (var username in usernamesUnicos)
+                {
+                    comboBox1.Items.Add(username);
+                }
             }
 
-            TraducirControlesRecursivo(this, traducciones);
+            comboBox1.SelectedIndex = 0;
+
+            comboBox1.SelectedIndexChanged += (sender, e) => ConfigurarGrid();
+
+            return comboBox1;
         }
 
-        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
-        {
-            foreach (Control c in contenedor.Controls)
-            {
-                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
-                {
-                    c.Text = traducciones[c.Tag.ToString()];
-                }
-
-                if (c.HasChildren)
-                {
-                    TraducirControlesRecursivo(c, traducciones);
-                }
-            }
-        }
         #endregion
 
-        #region Configuración y Formato del DataGridView (UI)
+        #region Configuración, Filtrado Combinado y Formato del DataGridView (UI)
+
         public void ConfigurarGrid()
         {
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -118,15 +136,24 @@ namespace SistemaTurnos
             dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgv.ColumnHeadersHeight = 35;
 
-            string seleccion = cmbFiltro.SelectedItem.ToString();
-            if (seleccion == "Todos")
+
+            string seleccionSeveridad = cmbFiltro.SelectedItem?.ToString() ?? "Todos";
+            string seleccionUsuario = comboBox1.SelectedItem?.ToString() ?? "Todos";
+
+            IEnumerable<Bitacora> query = DatosListado;
+
+            if (seleccionSeveridad != "Todos")
             {
-                dgv.DataSource = DatosListado;
+                query = query.Where(x => x.Severidad.HasValue && x.Severidad.Value.ToString() == seleccionSeveridad);
             }
-            else
+
+            if (seleccionUsuario != "Todos")
             {
-                dgv.DataSource = DatosListado.FindAll(x => x.Severidad.HasValue && x.Severidad.Value.ToString() == seleccion);
+                query = query.Where(x => x.Usuario_Username == seleccionUsuario);
             }
+
+            dgv.DataSource = query.ToList();
+
             FormatearColumnas();
         }
 
@@ -153,6 +180,37 @@ namespace SistemaTurnos
             dgv.Columns["Accion"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dgv.Columns["Mensaje"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         }
+
+        #endregion
+
+        #region Implementación del Patrón Observer (IIdiomaObserver)
+
+        public void UpdateIdioma(Dictionary<string, string> traducciones)
+        {
+            if (this.Tag != null && traducciones.ContainsKey(this.Tag.ToString()))
+            {
+                this.Text = traducciones[this.Tag.ToString()];
+            }
+
+            TraducirControlesRecursivo(this, traducciones);
+        }
+
+        private void TraducirControlesRecursivo(Control contenedor, Dictionary<string, string> traducciones)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Tag != null && traducciones.ContainsKey(c.Tag.ToString()))
+                {
+                    c.Text = traducciones[c.Tag.ToString()];
+                }
+
+                if (c.HasChildren)
+                {
+                    TraducirControlesRecursivo(c, traducciones);
+                }
+            }
+        }
+
         #endregion
     }
 }

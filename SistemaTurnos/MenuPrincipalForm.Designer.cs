@@ -45,7 +45,6 @@ namespace SistemaTurnos
             this.bitacoraToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.gestionarIdiomaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gestionarIdiomaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.restaurarIntegridadToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.seleccionarIdiomaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.cerrarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
@@ -59,7 +58,6 @@ namespace SistemaTurnos
             this.gestionPerfilesToolStripMenuItem,
             this.bitacoraToolStripMenuItem1,
             this.gestionarIdiomaToolStripMenuItem,
-            this.restaurarIntegridadToolStripMenuItem1,
             this.seleccionarIdiomaToolStripMenuItem1,
             this.cerrarSesionToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -82,7 +80,7 @@ namespace SistemaTurnos
             // modificarMailToolStripMenuItem
             // 
             this.modificarMailToolStripMenuItem.Name = "modificarMailToolStripMenuItem";
-            this.modificarMailToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.modificarMailToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.modificarMailToolStripMenuItem.Tag = "MODIFICAR_MAIL";
             this.modificarMailToolStripMenuItem.Text = "Modificar Mail";
             this.modificarMailToolStripMenuItem.Click += new System.EventHandler(this.modificarMailToolStripMenuItem_Click);
@@ -90,7 +88,7 @@ namespace SistemaTurnos
             // cambiarClaveToolStripMenuItem
             // 
             this.cambiarClaveToolStripMenuItem.Name = "cambiarClaveToolStripMenuItem";
-            this.cambiarClaveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.cambiarClaveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.cambiarClaveToolStripMenuItem.Tag = "MODIFICAR_CLAVE";
             this.cambiarClaveToolStripMenuItem.Text = "Cambiar Clave";
             this.cambiarClaveToolStripMenuItem.Click += new System.EventHandler(this.cambiarClaveToolStripMenuItem_Click_1);
@@ -185,18 +183,10 @@ namespace SistemaTurnos
             // gestionarIdiomaToolStripMenuItem1
             // 
             this.gestionarIdiomaToolStripMenuItem1.Name = "gestionarIdiomaToolStripMenuItem1";
-            this.gestionarIdiomaToolStripMenuItem1.Size = new System.Drawing.Size(164, 22);
+            this.gestionarIdiomaToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.gestionarIdiomaToolStripMenuItem1.Tag = "GESTIONAR_IDIOMA";
             this.gestionarIdiomaToolStripMenuItem1.Text = "Gestionar Idioma";
             this.gestionarIdiomaToolStripMenuItem1.Click += new System.EventHandler(this.gestionarIdiomaToolStripMenuItem1_Click);
-            // 
-            // restaurarIntegridadToolStripMenuItem1
-            // 
-            this.restaurarIntegridadToolStripMenuItem1.Name = "restaurarIntegridadToolStripMenuItem1";
-            this.restaurarIntegridadToolStripMenuItem1.Size = new System.Drawing.Size(125, 20);
-            this.restaurarIntegridadToolStripMenuItem1.Tag = "RESTAURAR_INTEGRIDAD";
-            this.restaurarIntegridadToolStripMenuItem1.Text = "Restaurar Integridad";
-            this.restaurarIntegridadToolStripMenuItem1.Click += new System.EventHandler(this.restaurarIntegridadToolStripMenuItem1_Click);
             // 
             // seleccionarIdiomaToolStripMenuItem1
             // 
@@ -253,7 +243,6 @@ namespace SistemaTurnos
         private System.Windows.Forms.ToolStripMenuItem gestionarPerfilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem asignarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem asignarPerfilesAUsuarioToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem restaurarIntegridadToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem seleccionarIdiomaToolStripMenuItem1;
     }
 }

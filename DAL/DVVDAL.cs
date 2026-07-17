@@ -16,11 +16,11 @@ namespace DAL
             DAO dao = new DAO();
 
             var ds = dao.ExecuteDataSet(
-                "SELECT TOP 1 * FROM DVV WHERE Nombre_tabla = @NombreTabla",
-                new SqlParameter("@NombreTabla", nombreTabla)
-            );
+                           "EXEC sp_DVV_Operaciones @Accion = 'SELECT', @NombreTabla = @NombreTabla",
+                           new SqlParameter("@NombreTabla", nombreTabla)
+                       );
 
-            if (ds.Tables.Count == 0 ||     ds.Tables[0].Rows.Count == 0)
+            if (ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
                 return null;
 
             return MapDVV(ds.Tables[0].Rows[0]);
@@ -29,10 +29,11 @@ namespace DAL
         {
             DAO dao = new DAO();
 
-            int filasAfectadas = dao.ExecuteNonQueryFuntion(
-                "UPDATE DVV SET Suma = @Suma WHERE Nombre_tabla = @NombreTabla",
-                new SqlParameter("@Suma", nuevaSuma),
-                new SqlParameter("@NombreTabla", nombreTabla)
+            int filasAfectadas = dao.ExecuteStoredProcedure(
+                "sp_DVV_Operaciones",
+                new SqlParameter("@Accion", "UPDATE"),
+                new SqlParameter("@NombreTabla", nombreTabla),
+                new SqlParameter("@Suma", nuevaSuma.ToString()) 
             );
 
             return filasAfectadas > 0;

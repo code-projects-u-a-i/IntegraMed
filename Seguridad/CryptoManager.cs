@@ -9,7 +9,7 @@ namespace Seguridad
 {
     public class CryptoManager 
     {
-        public string GenerarHashSHA256(string textoPlano) // nuevo algoritmo! cambio!
+        public string GenerarHashMD5(string textoPlano) 
         {
             using (SHA256 sha256 = SHA256.Create())
             {
